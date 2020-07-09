@@ -82,3 +82,4 @@ Download latest chrome driver:
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
 - [Official selenium docs](https://www.selenium.dev/documentation/en/)
+- [generating-junit-html-reports](https://www.eviltester.com/post/junit/generating-junit-html-reports/)
