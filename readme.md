@@ -10,6 +10,21 @@ Go to the drive location from where you want to run this project.
 > This should run the tests and you should now see a target repository created in root. This should now contain reports. 
 in path 'Your root directory'\WebdriverCI\target\surefire-reports
 
+> Dependencies (Once we start running with Docker, these dependencies will be removed) 
+> - JDK installed 
+> - Maven installed 
+
+# Project Goals
+- [ ] Clean design
+    - [ ] Tests should run in parallel
+    - [ ] Tests should be agnostic of browser. Should only bother about testing the app.
+    - [ ] Driver should be agnostic of browser choice. Choice should be made outside driver.
+    - [ ] User should be able to define a default browser or a browser of his choice from command line or from CI/hub/Saucelabs.
+- [ ] Use of docker files to setup test environment
+- [ ] Use of CI to run tests with each merge in master
+- [ ] Use of reports (html) & CI parceable
+
+
 # Design components
 - Step1: Test Environment setup (using dockers)
 - Step2: Design should be clean and should allow for easy CI/manual switch.
