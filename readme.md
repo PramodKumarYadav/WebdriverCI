@@ -16,10 +16,11 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 
 # Project Goals
 - [ ] Clean design
+    - [ ] Tests should be atomic and independent of each other (to allow running in parallel)
     - [ ] Tests should run in parallel
-    - [ ] Tests should be agnostic of browser. Should only bother about testing the app.
-    - [ ] Driver should be agnostic of browser choice. Choice should be made outside driver.
-    - [ ] User should be able to define a default browser or a browser of his choice from command line or from CI/hub/Saucelabs.
+    - [X] Tests should be agnostic of browser. Should only bother about testing the app.
+    - [X] Driver should be agnostic of browser choice. Choice should be made outside driver.
+    - [X] User should be able to define a default browser or a browser of his choice from command line or from CI/hub/Saucelabs.
 - [ ] Use of docker files to setup test environment
 - [ ] Use of CI to run tests with each merge in master
 - [ ] Use of reports (html) & CI parceable
