@@ -10,10 +10,15 @@ Go to the drive location from where you want to run this project.
 > This should run the tests and you should now see a target repository created in root. This should now contain reports. 
 in path 'Your root directory'\WebdriverCI\target\surefire-reports
 
-> Dependencies (Once we start running with Docker, these dependencies will be removed) 
+> Dependencies (Once we start running with Docker, these dependencies will be removed and reduced only to having Docker desktop installed on your machine) 
 > - GIT installed
 > - JDK installed 
 > - Maven installed 
+
+# Tools (recommended)
+- IntelliJ (for building tests)
+- VSCode (for GitHub integration and also for running tests in containers - when we get there)
+    - Powershell plugin
 
 # Project Goals
 - [ ] Clean design
@@ -56,19 +61,24 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 # Step1: Test Environment setup 
 ## Manual setup (Without dockers)
 Download latest chrome driver:
-https://sites.google.com/a/chromium.org/chromedriver/downloads
+[Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 
 # Step2: Design decisions:
 - Tests should be atomic (not dependent on each other)
 - Tests should run in parrallel.
-    - https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd
+    - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
 - Tests should be browser agnostic and should only care about testing the application.
 - Driver should work with whatever browser is passed to it from outside. 
 - User should be able to set the browser and tests to run, from outside tests; i.e. via command line, CI. In rare cases, if there is a need it should be possible to set the browser from tests however this is a bad practise and must always be avoided. 
 
 # Step3: To run the tests from command line (for any browser)
-- https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/
+- [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - mvn test -Dbrowser=chrome (To run tests in chrome)
 - mvn test -Dbrowser=firefox (To run tests in firefox)
 - mvn test -Dbrowser=chrome -Dtest=MavenTest (To run tests in chrome only for test class MavenTest)
 
+# References
+- [Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+- [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
+- [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
+- [Official selenium docs](https://www.selenium.dev/documentation/en/)
