@@ -1,3 +1,14 @@
+# To run this project.
+Go to the drive location from where you want to run this project. 
+> Run below commands from command line (needs git to be installed).Say
+
+- cd c:\
+- Git clone https://github.com/PramodKumarYadav/WebdriverCI.git
+- cd WebdriverCI
+> Open in say vscode powershell (or from command line itself) run a test and see if all works okay. Run from command line below command.
+- mvn clean test
+> This should run the tests and you should now see a target repository created in root. This should now contain reports. 
+in path 'Your root directory'\WebdriverCI\target\surefire-reports
 
 # Design components
 - Step1: Test Environment setup (using dockers)
