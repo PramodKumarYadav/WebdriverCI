@@ -6,6 +6,8 @@
 
 package com.epo.webdriver.manager;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
@@ -13,11 +15,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class Driver extends Browser implements WebDriver{
+public class Driver extends Browser implements WebDriver {
 
     WebDriver driver;
     String browserName;
@@ -45,6 +50,18 @@ public class Driver extends Browser implements WebDriver{
 
         if (browserName.equalsIgnoreCase("htmlunit")) {
             this.driver = new HtmlUnitDriver(true);
+        }
+
+        if (browserName.equalsIgnoreCase("grid")) {
+            // ChromeOptions options = new ChromeOptions();
+            FirefoxOptions options = new FirefoxOptions();
+
+            String nodeURL = "http://localhost:4444/wd/hub";
+            try {
+                this.driver = new RemoteWebDriver(new URL(nodeURL), options);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -93,7 +110,14 @@ public class Driver extends Browser implements WebDriver{
     }
 
     public void quit() {
-        this.driver.quit();
+        // this.driver.quit();
+        try{
+            this.driver.quit();
+        }catch (Exception e){
+            System.out.println("Browser closed already, " +
+                            "did not need to quit after all");
+            // e.printStackTrace();
+        }
     }
 
     public TargetLocator switchTo() {
