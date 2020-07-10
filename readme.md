@@ -35,8 +35,11 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 - Scale any service as `docker service scale grid_chrome=5` or/and `docker service scale grid_firefox=3`
 - Check if grid scaled: http://localhost:4444/grid/console 
 - list stack with `docker stack ls`
-- Now you can go to your command line (local/CI) and run tests on grid using: 
-    - PS D:\WebdriverCI> `mvn clean test -Dbrowser=grid`
+- Now to run tests
+  - (for now- I will provide a better way soon), First go to the Driver class and uncomment the driver you want to select for running (from line 56 - grid)
+  - say you want: *ChromeOptions options = new ChromeOptions();* [uncomment this line and comment other driver types in this if block (grid)]
+  - Now you can go to your command line (local/CI) and run tests on grid using: 
+  - PS D:\WebdriverCI> `mvn clean test -Dbrowser=grid`
 - Stop stack with `docker stack rm grid`
 - Note: If you get errors in containes and you are not able to do another mvn clean test, 
   - then remove stack (with `docker stack rm grid`), 
@@ -50,9 +53,10 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
     - [X] Choice of browser is to be made outside tests (either via CI or command line). In case if you dont want to do that, there should be a option for user to define a default driver with which all tests could be run. 
     - [ ] Tests should be atomic and independent of each other (to allow running in parallel)
     - [ ] Tests should run in parallel (to keep test feedback fast and to encourage more tests)
-- [ ] Use of docker files to setup test environment
-    - To allow tests to run distributed (not same as parrallel)
-    - To allow a consistent setup across test machines.
+- [X] Use of docker files to setup test environment
+    - [X] To allow tests to run distributed on a grid (not same as parrallel)
+    - [ ] To allow a consistent setup across test machines.
+    - [ ] To create a test container to also run tests from container (entrypoint) -not just from localhost -GRID (which needs local setup)
 - [ ] Use of CI to run tests with each merge in master
 - [ ] Use of reports (html) & CI parceable
 

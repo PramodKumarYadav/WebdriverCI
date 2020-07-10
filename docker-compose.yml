@@ -6,7 +6,10 @@
 # Scale any service as `docker service scale grid_chrome=5` or/and `docker service scale grid_firefox=3`
 # Check if grid scaled: http://localhost:4444/grid/console 
 # list stack with `docker stack ls`
-# Now you can go to your command line (local/CI) and run tests on grid using: 
+# Now to run tests
+  # First go to the Driver class and uncomment the driver you want to select for running (from line 56 - grid)
+  # say you want: ChromeOptions options = new ChromeOptions(); [uncomment this and comment other driver types in this if block (grid)]
+  # Now you can go to your command line (local/CI) and run tests on grid using: 
   # PS D:\WebdriverCI> `mvn clean test -Dbrowser=grid`
 # Stop stack with `docker stack rm grid`
 # Note: If you get errors in containes and you are not able to do another mvn clean test, 

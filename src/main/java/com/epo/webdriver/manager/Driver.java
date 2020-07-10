@@ -20,6 +20,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class Driver extends Browser implements WebDriver {
@@ -54,7 +55,8 @@ public class Driver extends Browser implements WebDriver {
 
         if (browserName.equalsIgnoreCase("grid")) {
             // ChromeOptions options = new ChromeOptions();
-            FirefoxOptions options = new FirefoxOptions();
+            // FirefoxOptions options = new FirefoxOptions();
+            OperaOptions options = new OperaOptions();
 
             String nodeURL = "http://localhost:4444/wd/hub";
             try {
