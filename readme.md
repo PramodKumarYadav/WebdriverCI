@@ -78,8 +78,11 @@ Download latest chrome driver:
 - mvn test -Dbrowser=chrome -Dtest=MavenTest (To run tests in chrome only for test class MavenTest)
 
 # References
+- [Official selenium docs](https://www.selenium.dev/documentation/en/)
+- [Official github repo for docker-selenium](https://github.com/SeleniumHQ/docker-selenium)
+- [docker-selenium/releases - to know driver versions](https://github.com/SeleniumHQ/docker-selenium/releases)
 - [Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
-- [Official selenium docs](https://www.selenium.dev/documentation/en/)
 - [generating-junit-html-reports](https://www.eviltester.com/post/junit/generating-junit-html-reports/)
+- [distributed-testing-with-selenium-grid](https://testdriven.io/blog/distributed-testing-with-selenium-grid/)
