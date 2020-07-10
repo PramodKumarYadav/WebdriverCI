@@ -1,3 +1,15 @@
+/*
+Usage of properties from command line
+mvn clean test (defaults to -Dhost=local -Dbrowser=chrome )
+mvn clean test -Dbrowser=firefox (To run tests in firefox; defaults to -Dhost=local)
+mvn clean test -Dhost=local -Dbrowser=chrome (same as default)
+mvn clean test -Dhost=local -Dbrowser=chrome -Dtest=MavenTest (To run tests in chrome only for test class MavenTest)
+
+To run tests on grid.
+mvn clean test -Dhost=grid -Dbrowser=chrome
+mvn clean test -Dbrowser=firefox -Dhost=grid
+*/
+
 package com.epo.webdriver.manager;
 
 public class Properties {
