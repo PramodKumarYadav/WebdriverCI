@@ -23,47 +23,74 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class Driver extends Browser implements WebDriver {
+public class Driver extends Properties implements WebDriver {
 
     WebDriver driver;
+    String hostName;
     String browserName;
 
     public Driver() {
-        this(getBrowserName());
+        this(getHostName(), getBrowserName());
     }
 
-    public Driver(String browserName) {
+    public Driver(String hostName, String browserName) {
+
+        this.hostName = hostName;
+        System.out.println("host name passed to driver: " + hostName);
 
         this.browserName = browserName;
         System.out.println("browser name passed to driver: " + browserName);
 
-        if (browserName.equalsIgnoreCase("chrome")) {
-            this.driver = new ChromeDriver();
-        }
+        switch (hostName.toLowerCase()) {
+            case "local":
+                if (browserName.equalsIgnoreCase("chrome")) {
+                    this.driver = new ChromeDriver();
+                }
 
-        if (browserName.equalsIgnoreCase("firefox")) {
-            this.driver = new FirefoxDriver();
-        }
+                if (browserName.equalsIgnoreCase("firefox")) {
+                    this.driver = new FirefoxDriver();
+                }
 
-        if (browserName.equalsIgnoreCase("ie")) {
-            this.driver = new InternetExplorerDriver();
-        }
+                if (browserName.equalsIgnoreCase("ie")) {
+                    this.driver = new InternetExplorerDriver();
+                }
 
-        if (browserName.equalsIgnoreCase("htmlunit")) {
-            this.driver = new HtmlUnitDriver(true);
-        }
+                if (browserName.equalsIgnoreCase("htmlunit")) {
+                    this.driver = new HtmlUnitDriver(true);
+                }
+                break;
+            case "grid":
+                String nodeURL = "http://localhost:4444/wd/hub";
+                if (browserName.equalsIgnoreCase("chrome")) {
+                    ChromeOptions options = new ChromeOptions();
+                    try {
+                        this.driver = new RemoteWebDriver(new URL(nodeURL), options);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-        if (browserName.equalsIgnoreCase("grid")) {
-            ChromeOptions options = new ChromeOptions();
-            // FirefoxOptions options = new FirefoxOptions();
-            // OperaOptions options = new OperaOptions();
+                if (browserName.equalsIgnoreCase("firefox")) {
+                    FirefoxOptions options = new FirefoxOptions();
+                    try {
+                        this.driver = new RemoteWebDriver(new URL(nodeURL), options);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            String nodeURL = "http://localhost:4444/wd/hub";
-            try {
-                this.driver = new RemoteWebDriver(new URL(nodeURL), options);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+                if (browserName.equalsIgnoreCase("opera")) {
+                    OperaOptions options = new OperaOptions();
+                    try {
+                        this.driver = new RemoteWebDriver(new URL(nodeURL), options);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            default:
+                this.driver = new ChromeDriver();
+                break;
         }
     }
 
@@ -116,7 +143,7 @@ public class Driver extends Browser implements WebDriver {
         try{
             this.driver.quit();
         }catch (Exception e){
-            System.out.println("Browser closed already, " +
+            System.out.println("Properties closed already, " +
                             "did not need to quit after all");
             // e.printStackTrace();
         }

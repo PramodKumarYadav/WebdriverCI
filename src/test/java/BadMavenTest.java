@@ -14,7 +14,7 @@ import static org.hamcrest.core.Is.is;
         public void setUp() {
 
 
-            // (Browser must not be set in tests but from CI or command line as shown below)
+            // (Properties must not be set in tests but from CI or command line as shown below)
             // To run the tests from command line (for any browser)
             //     - https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/
             //     - mvn test -Dbrowser=chrome (To run tests in chrome)
