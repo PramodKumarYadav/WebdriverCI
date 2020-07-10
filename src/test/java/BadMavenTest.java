@@ -52,7 +52,7 @@ import static org.hamcrest.core.Is.is;
         @Test
         public void test1() {
             driver.get("http://www.vpl.ca");
-            assertThat(driver.getTitle(), is("Vancouver Public Library |"));
+            assertThat(driver.getTitle(), is("Vancouver Public Library 3 |"));
         }
 
     }

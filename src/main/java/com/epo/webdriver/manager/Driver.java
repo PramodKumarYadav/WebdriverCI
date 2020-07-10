@@ -54,9 +54,9 @@ public class Driver extends Browser implements WebDriver {
         }
 
         if (browserName.equalsIgnoreCase("grid")) {
-            // ChromeOptions options = new ChromeOptions();
+            ChromeOptions options = new ChromeOptions();
             // FirefoxOptions options = new FirefoxOptions();
-            OperaOptions options = new OperaOptions();
+            // OperaOptions options = new OperaOptions();
 
             String nodeURL = "http://localhost:4444/wd/hub";
             try {

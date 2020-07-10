@@ -16,6 +16,20 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 > - JDK installed 
 > - Maven installed 
 
+> Versions used
+
+> PS D:\WebdriverCI> java -version
+> - java version "10.0.2" 2018-07-17
+> - Java(TM) SE Runtime Environment 18.3 (build 10.0.2+13)
+> - Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.2+13, mixed mode)
+
+> PS D:\WebdriverCI> mvn -version 
+> - Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-17T20:33:14+02:00)
+> - Maven home: C:\Program Files\Apache\maven\bin\..
+> - Java version: 10.0.2, vendor: Oracle Corporation, runtime: C:\Program Files\Java\jdk-10.0.2
+> - Default locale: en_US, platform encoding: Cp1252
+> - OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+
 # Tools (recommended)
 - IntelliJ (for building tests)
 - VSCode (for GitHub integration and also for running tests in containers - when we get there)
@@ -45,6 +59,14 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
   - then remove stack (with `docker stack rm grid`), 
   - and redeploy the Grid; `docker stack deploy -c docker-compose.yml grid`
   - [ ] Todo: Find a way to pass both grid and browser choice in the test. Then we can put that in CI and run all tests anyway we like.
+- NOTE: If you want to check that, the tests are really running from containers (with containers drivers and not local driver); do this
+    - remove a driver from tools location (say remove chromedriver.exe from your drivers path (in my case this is: C:\tools\selenium)) and say put this on desktop.
+    - Run a local test without using grid, so say: *mvn clean test -Dbrowser=chrome*
+        -  This should now fail saying:
+        -  *Cannot find file at 'c:\tools\selenium\chromedriver.exe' (c:\tools\selenium\chromedriver.exe). This usually indicates a missing or moved file.*
+    - Now, select the line in Driver Class in grid, as chrome driver and run say *mvn clean test -Dbrowser=grid*
+        - You will see that tests ran successfully.
+        - This proves that tests are running inside container in grid and not using driver from your local machine. 
 
 # Framework Goals
 - [ ] Clean design
