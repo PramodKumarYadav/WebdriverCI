@@ -1,10 +1,10 @@
 # Reference: https://github.com/SeleniumHQ/docker-selenium
 # To start Docker in Swarm mode, you need to run `docker swarm init`
 # To deploy the Grid, `docker stack deploy -c docker-compose.yml grid`
-# list with `docker service ls` 
-# scale any service as `docker service scale grid_chrome=5`
+# list services with `docker service ls` 
+# Scale any service as `docker service scale grid_chrome=5`
 # list stack with `docker stack ls`
-# Stop with `docker stack rm grid`
+# Stop stack with `docker stack rm grid`
 
 version: '3.7'
 
