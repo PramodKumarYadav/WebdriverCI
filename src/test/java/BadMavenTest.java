@@ -35,20 +35,24 @@ import static org.hamcrest.core.Is.is;
         // If you have to set a seperate browser than the one you passed from CI, you must do it via specifying the name
         // not by setting the property. This way, your other tests, will use the default from propety and this test
         // will use what you specify.
-        driver = new Driver("firefox");
+        // Uncommenting this will make it a bad test since we may 'think' we are running with the browser of our choice
+        // but this command will run it using another browser 
+        // (which will be a problem in say GRID-Docker-setup-which will not have that browser)  
+        // driver = new Driver("firefox");
 
-//            driver = new Driver();
+           driver = new Driver();
         }
 
         @After
         public void tearDown() {
+            driver.close();
             driver.quit();
         }
 
         @Test
         public void test1() {
             driver.get("http://www.vpl.ca");
-            assertThat(driver.getTitle(), is("Vancouver Public Library 3 |"));
+            assertThat(driver.getTitle(), is("Vancouver Public Library |"));
         }
 
     }
