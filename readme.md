@@ -143,3 +143,5 @@ Download latest chrome driver:
 - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
 - [generating-junit-html-reports](https://www.eviltester.com/post/junit/generating-junit-html-reports/)
 - [distributed-testing-with-selenium-grid](https://testdriven.io/blog/distributed-testing-with-selenium-grid/)
+- [pass-parameters-from-command-line-to-a-selenium-project-using-maven-command](https://www.google.com/amp/s/eltestor.wordpress.com/2015/09/13/pass-parameters-from-command-line-to-a-selenium-project-using-maven-command/amp/)
+- [article in ruby to build docker image for test project](https://www.methodsandtools.com/archive/testingdocker.php)
