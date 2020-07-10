@@ -1,4 +1,4 @@
-# To run this project.
+# To run this project (locally)
 Go to the drive location from where you want to run this project. 
 > Run below commands from command line (needs git to be installed).Say
 
@@ -10,7 +10,8 @@ Go to the drive location from where you want to run this project.
 > This should run the tests and you should now see a target repository created in root. This should now contain reports. 
 in path 'Your root directory'\WebdriverCI\target\surefire-reports
 
-> Dependencies (Once we start running with Docker, these dependencies will be removed and reduced only to having Docker desktop installed on your machine) 
+> # Dependencies 
+> (Once we start running tests with (and in) Docker, these dependencies will be removed and reduced only to having Docker desktop installed on your machine) 
 > - GIT installed
 > - JDK installed 
 > - Maven installed 
@@ -20,7 +21,29 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 - VSCode (for GitHub integration and also for running tests in containers - when we get there)
     - Powershell plugin
 
-# Project Goals
+# To run this project on a local GRID on scale, using docker images (docker-compose)
+> # Dependencies
+> - Docker Desktop installed
+> - JDK installed 
+> - Maven installed 
+
+- Reference: https://github.com/SeleniumHQ/docker-selenium
+- To start Docker in Swarm mode, you need to run `docker swarm init`
+- To deploy the Grid, `docker stack deploy -c docker-compose.yml grid`
+- Check if grid is active or not: http://localhost:4444/grid/console 
+- list services with `docker service ls` 
+- Scale any service as `docker service scale grid_chrome=5` or/and `docker service scale grid_firefox=3`
+- Check if grid scaled: http://localhost:4444/grid/console 
+- list stack with `docker stack ls`
+- Now you can go to your command line (local/CI) and run tests on grid using: 
+    - PS D:\WebdriverCI> `mvn clean test -Dbrowser=grid`
+- Stop stack with `docker stack rm grid`
+- Note: If you get errors in containes and you are not able to do another mvn clean test, 
+  - then remove stack (with `docker stack rm grid`), 
+  - and redeploy the Grid; `docker stack deploy -c docker-compose.yml grid`
+  - [ ] Todo: Find a way to pass both grid and browser choice in the test. Then we can put that in CI and run all tests anyway we like.
+
+# Framework Goals
 - [ ] Clean design
     - [X] Tests should be agnostic of browser. i.e. Tests should only have context about tseting the app (no reference to browser).
     - [X] Driver should be agnostic of browser choice. i.e. the choice of browser should be outside driver class. It should just provide a driver that it asked. 
@@ -28,6 +51,8 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
     - [ ] Tests should be atomic and independent of each other (to allow running in parallel)
     - [ ] Tests should run in parallel (to keep test feedback fast and to encourage more tests)
 - [ ] Use of docker files to setup test environment
+    - To allow tests to run distributed (not same as parrallel)
+    - To allow a consistent setup across test machines.
 - [ ] Use of CI to run tests with each merge in master
 - [ ] Use of reports (html) & CI parceable
 
@@ -82,6 +107,7 @@ Download latest chrome driver:
 - [Official github repo for docker-selenium](https://github.com/SeleniumHQ/docker-selenium)
 - [docker-selenium/releases - to know driver versions](https://github.com/SeleniumHQ/docker-selenium/releases)
 - [Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+    - [Capabilities & ChromeOptions](https://chromedriver.chromium.org/capabilities)
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
 - [generating-junit-html-reports](https://www.eviltester.com/post/junit/generating-junit-html-reports/)

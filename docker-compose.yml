@@ -1,10 +1,17 @@
 # Reference: https://github.com/SeleniumHQ/docker-selenium
 # To start Docker in Swarm mode, you need to run `docker swarm init`
 # To deploy the Grid, `docker stack deploy -c docker-compose.yml grid`
+# Check if grid is active or not: http://localhost:4444/grid/console 
 # list services with `docker service ls` 
-# Scale any service as `docker service scale grid_chrome=5`
+# Scale any service as `docker service scale grid_chrome=5` or/and `docker service scale grid_firefox=3`
+# Check if grid scaled: http://localhost:4444/grid/console 
 # list stack with `docker stack ls`
+# Now you can go to your command line (local/CI) and run tests on grid using: 
+  # PS D:\WebdriverCI> `mvn clean test -Dbrowser=grid`
 # Stop stack with `docker stack rm grid`
+# Note: If you get errors in containes and you are not able to do another mvn clean test, 
+  # then stop stack (with `docker stack rm grid`), 
+  # and deploy the Grid again, `docker stack deploy -c docker-compose.yml grid`
 
 version: '3.7'
 
