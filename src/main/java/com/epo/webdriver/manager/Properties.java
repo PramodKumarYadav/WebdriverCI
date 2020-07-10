@@ -2,25 +2,25 @@ package com.epo.webdriver.manager;
 
 public class Properties {
 
-    private static String hostName;
-    private static String browserName;
+    private static String host;
+    private static String browser;
 
-    public static String getHostName() {
-        //  Set 'hostName' property from CI (or command line parameter) and get the property here.
+    public static String getHost() {
+        //  Set 'host' property from CI (or command line parameter) and get the property here.
         // If you want to test with a default value for this property, give it here, say "local".
-        hostName = System.getProperty("hostName","local");
-        System.out.println("System property key:'hostName'; value: " + hostName);
+        host = System.getProperty("host","local");
+        System.out.println("System property key:'host'; value: " + host);
 
-        return hostName;
+        return host;
     }
 
-    public static String getBrowserName() {
-        //  Set 'browserName' property from CI (or command line parameter) and get the property here.
+    public static String getBrowser() {
+        //  Set 'browser' property from CI (or command line parameter) and get the property here.
         // If you want to test with a default value for this property, give it here, say "chrome".
-        browserName = System.getProperty("browserName","chrome");
-        System.out.println("System property key:'browserName'; value: " + browserName);
+        browser = System.getProperty("browser","chrome");
+        System.out.println("System property key:'browser'; value: " + browser);
 
-        return browserName;
+        return browser;
     }
 
 }

@@ -53,7 +53,12 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
   - (for now- I will provide a better way soon), First go to the Driver class and uncomment the driver you want to select for running (from line 56 - grid)
   - say you want: *ChromeOptions options = new ChromeOptions();* [uncomment this line and comment other driver types in this if block (grid)]
   - Now you can go to your command line (local/CI) and run tests on grid using: 
-  - PS D:\WebdriverCI> `mvn clean test -Dbrowser=grid`
+    - PS D:\WebdriverCI> `mvn clean test -Dhost=grid -Dbrowser=chrome `
+  - And you can open another powershell window and in parrallel, run tests on say firefox on the grid
+    - PS D:\WebdriverCI> `mvn clean test -Dbrowser=firefox -Dhost=grid` (note: order of parameter doesn't matter)
+  - And on the local parrallely, if you wish
+    - PS D:\WebdriverCI> `mvn clean test -Dhost=local -Dbrowser=chrome `
+    - PS D:\WebdriverCI> `mvn clean test ` (default is -Dhost=local -Dbrowser=chrome)
 - Stop stack with `docker stack rm grid`
 - Note: If you get errors in containes and you are not able to do another mvn clean test, 
   - then remove stack (with `docker stack rm grid`), 
@@ -124,9 +129,9 @@ Download latest chrome driver:
 
 # Step3: To run the tests from command line (for any browser)
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
-- mvn test -Dbrowser=chrome (To run tests in chrome)
-- mvn test -Dbrowser=firefox (To run tests in firefox)
-- mvn test -Dbrowser=chrome -Dtest=MavenTest (To run tests in chrome only for test class MavenTest)
+- `mvn clean test -Dhost=local -Dbrowser=chrome ` (To run tests in chrome locally)
+- `mvn clean test -Dbrowser=firefox ` (To run tests in firefox; default host is set as -Dhost=local, so can be skipped)
+- `mvn clean test -Dhost=local -Dbrowser=chrome -Dtest=MavenTest ` (To run tests in chrome only for test class MavenTest)
 
 # References
 - [Official selenium docs](https://www.selenium.dev/documentation/en/)

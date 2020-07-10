@@ -26,42 +26,42 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 public class Driver extends Properties implements WebDriver {
 
     WebDriver driver;
-    String hostName;
-    String browserName;
+    String host;
+    String browser;
 
     public Driver() {
-        this(getHostName(), getBrowserName());
+        this(getHost(), getBrowser());
     }
 
-    public Driver(String hostName, String browserName) {
+    public Driver(String host, String browser) {
 
-        this.hostName = hostName;
-        System.out.println("host name passed to driver: " + hostName);
+        this.host = host;
+        System.out.println("host property passed to driver: " + host);
 
-        this.browserName = browserName;
-        System.out.println("browser name passed to driver: " + browserName);
+        this.browser = browser;
+        System.out.println("browser property passed to driver: " + browser);
 
-        switch (hostName.toLowerCase()) {
+        switch (host.toLowerCase()) {
             case "local":
-                if (browserName.equalsIgnoreCase("chrome")) {
+                if (browser.equalsIgnoreCase("chrome")) {
                     this.driver = new ChromeDriver();
                 }
 
-                if (browserName.equalsIgnoreCase("firefox")) {
+                if (browser.equalsIgnoreCase("firefox")) {
                     this.driver = new FirefoxDriver();
                 }
 
-                if (browserName.equalsIgnoreCase("ie")) {
+                if (browser.equalsIgnoreCase("ie")) {
                     this.driver = new InternetExplorerDriver();
                 }
 
-                if (browserName.equalsIgnoreCase("htmlunit")) {
+                if (browser.equalsIgnoreCase("htmlunit")) {
                     this.driver = new HtmlUnitDriver(true);
                 }
                 break;
             case "grid":
                 String nodeURL = "http://localhost:4444/wd/hub";
-                if (browserName.equalsIgnoreCase("chrome")) {
+                if (browser.equalsIgnoreCase("chrome")) {
                     ChromeOptions options = new ChromeOptions();
                     try {
                         this.driver = new RemoteWebDriver(new URL(nodeURL), options);
@@ -70,7 +70,7 @@ public class Driver extends Properties implements WebDriver {
                     }
                 }
 
-                if (browserName.equalsIgnoreCase("firefox")) {
+                if (browser.equalsIgnoreCase("firefox")) {
                     FirefoxOptions options = new FirefoxOptions();
                     try {
                         this.driver = new RemoteWebDriver(new URL(nodeURL), options);
@@ -79,7 +79,7 @@ public class Driver extends Properties implements WebDriver {
                     }
                 }
 
-                if (browserName.equalsIgnoreCase("opera")) {
+                if (browser.equalsIgnoreCase("opera")) {
                     OperaOptions options = new OperaOptions();
                     try {
                         this.driver = new RemoteWebDriver(new URL(nodeURL), options);
