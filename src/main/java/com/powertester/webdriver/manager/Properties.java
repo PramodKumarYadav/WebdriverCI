@@ -1,4 +1,8 @@
 /*
+Set these properties from CI (or command line parameter) and get the properties here.
+The defaults (when parameter not passed) for each property is specified in second argument; 
+so for host=local and browser=chrome.
+
 Usage of properties from command line
 mvn clean test (defaults to -Dhost=local -Dbrowser=chrome )
 mvn clean test -Dbrowser=firefox (To run tests in firefox; defaults to -Dhost=local)
@@ -9,10 +13,6 @@ To run tests on grid.
 mvn clean test -Dhost=grid -Dbrowser=chrome
 mvn clean test -Dbrowser=firefox -Dhost=grid
 */
-
-// Set these properties from CI (or command line parameter) and get the properties here.
-// The defaults (when parameter not passed) for each property is specified in second argument; 
-// so for host=local and browser=chrome
 
 package com.powertester.webdriver.manager;
 
