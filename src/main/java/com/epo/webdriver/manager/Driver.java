@@ -24,7 +24,6 @@ import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class Driver extends Properties implements WebDriver {
-
     WebDriver driver;
     String host;
     String browser;
