@@ -28,6 +28,7 @@ public class Driver extends Properties implements WebDriver {
     WebDriver driver;
     String host;
     String browser;
+    URL gridURL;
 
     public Driver() {
         this(getHost(), getBrowser());
@@ -60,32 +61,26 @@ public class Driver extends Properties implements WebDriver {
                 }
                 break;
             case "grid":
-                String nodeURL = "http://localhost:4444/wd/hub";
+                String gridAddress = "http://localhost:4444/wd/hub";            
+                try {
+                    this.gridURL = new URL(gridAddress);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+
                 if (browser.equalsIgnoreCase("chrome")) {
                     ChromeOptions options = new ChromeOptions();
-                    try {
-                        this.driver = new RemoteWebDriver(new URL(nodeURL), options);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+                    this.driver = new RemoteWebDriver(gridURL, options);
                 }
 
                 if (browser.equalsIgnoreCase("firefox")) {
                     FirefoxOptions options = new FirefoxOptions();
-                    try {
-                        this.driver = new RemoteWebDriver(new URL(nodeURL), options);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+                    this.driver = new RemoteWebDriver(gridURL, options);
                 }
 
                 if (browser.equalsIgnoreCase("opera")) {
                     OperaOptions options = new OperaOptions();
-                    try {
-                        this.driver = new RemoteWebDriver(new URL(nodeURL), options);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+                    this.driver = new RemoteWebDriver(gridURL, options);
                 }
                 break;
             default:
