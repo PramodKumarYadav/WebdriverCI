@@ -10,15 +10,15 @@ mvn clean test -Dhost=grid -Dbrowser=chrome
 mvn clean test -Dbrowser=firefox -Dhost=grid
 */
 
+// Set these properties from CI (or command line parameter) and get the properties here.
+// The defaults (when parameter not passed) for each property is specified in second argument; 
+// so for host=local and browser=chrome
+
 package com.powertester.webdriver.manager;
 
 public class Properties {
     private static String host;
     private static String browser;
-
-    // Set these properties from CI (or command line parameter) and get the properties here.
-    // The defaults (when parameter not passed) for each property is specified in second argument; 
-    // so for host=local and browser=chrome
 
     public static String getHost() {
         host = System.getProperty("host","local");
