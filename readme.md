@@ -137,9 +137,14 @@ Download latest chrome driver:
 - `mvn clean test -Dtest=MavenTest ` (To run tests only for test class MavenTest. Defaults are local, chrome)
 - `mvn clean test -Dhost=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
 ## Run tests on grid (triggered from locally)
+### Setup GRID/nodes
+- [] add steps here (from above)
+### Run Tests
 - `mvn clean test -Dhost=grid ` (Default is chrome)
 - `mvn clean test -Dhost=grid -Dbrowser=chrome` 
 - `mvn clean test -Dhost=grid -Dbrowser=firefox` 
+### Troubleshooting (some tips)
+- [] to be added from above
 ## Run tests on grid (triggered from docker container)
 - [] to be done (after making dockerfile for this project)
 
