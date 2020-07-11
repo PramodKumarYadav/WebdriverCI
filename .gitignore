@@ -4,9 +4,11 @@ target
 temp
 
 # Intellij
-.vscode
 .idea
 *.iml
 .settings
 .classpath
 .project
+
+# vscode
+.vscode
