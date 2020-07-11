@@ -10,7 +10,7 @@ mvn clean test -Dhost=grid -Dbrowser=chrome
 mvn clean test -Dbrowser=firefox -Dhost=grid
 */
 
-package com.epo.webdriver.manager;
+package com.powertester.webdriver.manager;
 
 public class Properties {
     private static String host;
