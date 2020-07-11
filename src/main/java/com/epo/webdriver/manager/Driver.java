@@ -67,7 +67,7 @@ public class Driver extends Properties implements WebDriver {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-
+                
                 if (browser.equalsIgnoreCase("chrome")) {
                     ChromeOptions options = new ChromeOptions();
                     this.driver = new RemoteWebDriver(gridURL, options);
@@ -82,6 +82,9 @@ public class Driver extends Properties implements WebDriver {
                     OperaOptions options = new OperaOptions();
                     this.driver = new RemoteWebDriver(gridURL, options);
                 }
+                // Note: Even though the line to setup remotewebdriver is same in all above cases, I cannot 
+                // take it out. This is due to the reason that options are set differently for all browsers
+                // and there is no common options, to scope it out. (options not visible outside brackets {} )
                 break;
             default:
                 this.driver = new ChromeDriver();
