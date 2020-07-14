@@ -1,4 +1,5 @@
-import com.epo.webdriver.manager.Driver;
+
+import com.powertester.webdriver.manager.Driver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
