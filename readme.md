@@ -35,43 +35,7 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 > - Default locale: en_US, platform encoding: Cp1252
 > - OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
 
-## To run this project on a local GRID on scale, using docker images (docker-compose)
-> ## Dependencies
-> - Docker Desktop installed
-> - JDK installed 
-> - Maven installed 
 
-- Reference: https://github.com/SeleniumHQ/docker-selenium
-- To start Docker in Swarm mode, you need to run `docker swarm init`
-- To deploy the Grid, `docker stack deploy -c docker-compose.yml grid`
-- Check if grid is active or not: http://localhost:4444/grid/console 
-- list services with `docker service ls` 
-- Scale any service as `docker service scale grid_chrome=5` or/and `docker service scale grid_firefox=3`
-- Check if grid scaled: http://localhost:4444/grid/console 
-- list stack with `docker stack ls`
-- Now to run tests
-    - [X] Done: Find a way to pass both grid and browser choice in the test. Then we can put that in CI and run all tests anyway we like.
-  - Go to your command line (local/CI) and run tests on grid using browser of your choice: 
-    - PS D:\WebdriverCI> `mvn clean test -Dhost=grid -Dbrowser=chrome `
-  - And you can open another powershell window, and in parrallel, run tests on say firefox on the grid
-    - PS D:\WebdriverCI> `mvn clean test -Dbrowser=firefox -Dhost=grid` (note: order of parameter doesn't matter)
-  - And on the local parrallely, if you wish
-    - PS D:\WebdriverCI> `mvn clean test -Dhost=local -Dbrowser=chrome `
-    - PS D:\WebdriverCI> `mvn clean test ` (default is -Dhost=local -Dbrowser=chrome)
-- Stop stack with `docker stack rm grid`
-- Note: If you get errors in containes and you are not able to do another mvn clean test, 
-  - then remove stack (with `docker stack rm grid`), 
-  - and redeploy the Grid; `docker stack deploy -c docker-compose.yml grid`
-- NOTE: If you want to check that, the tests are really running from containers (with containers drivers and not local driver); do this
-    - Remove a driver from tools location (say remove chromedriver.exe from your drivers path (in my case this is: C:\tools\selenium)) and say put this on desktop.
-    - Run a local test without using grid, so say: 
-        - `mvn clean test -Dhost=local  -Dbrowser=chrome`
-        -  This should now fail saying:
-        -  `Cannot find file at 'c:\tools\selenium\chromedriver.exe' (c:\tools\selenium\chromedriver.exe). This usually indicates a missing or moved file.`
-    - Now, run the same test on grid, 
-        - `mvn clean test -Dhost=grid -Dbrowser=chrome`
-        - You will see that tests ran successfully.
-        - This proves that tests are running inside container in grid and not using driver from your local machine. 
 
 # Framework Goals
 - [ ] Clean design
@@ -117,7 +81,10 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 # Step1: Test Environment setup 
 ## Manual setup (Without dockers)
 Download latest chrome driver:
-[Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+- [Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+
+## Dockerize test framework
+- [maven base image](https://hub.docker.com/_/maven)
 
 # Step2: Design decisions:
 - Tests should be atomic (not dependent on each other)
@@ -130,22 +97,89 @@ Download latest chrome driver:
 # Step3: To run tests from command line (for any browser, local/grid)
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [pass-parameters-from-command-line-to-a-selenium-project-using-maven-command](https://www.google.com/amp/s/eltestor.wordpress.com/2015/09/13/pass-parameters-from-command-line-to-a-selenium-project-using-maven-command/amp/)
-## Run tests locally
+
+## Option1: Run tests locally
+### `Goal:`
+    -  Tests are triggered and run locally
+### `Benefits:`
+    - An option for easy local debugging and building scripts. 
+
+### Step1: Install drivers and setup system path variables
+- [] write instructions here or give link to the section
+
+### Step2: Run Tests locally
 - `mvn clean test ` (Default env is local and defaulut browser is chrome)
 - `mvn clean test -Dhost=local -Dbrowser=chrome ` (Same as default)
 - `mvn clean test -Dbrowser=firefox ` (To run tests in firefox; default host is local)
 - `mvn clean test -Dtest=MavenTest ` (To run tests only for test class MavenTest. Defaults are local, chrome)
 - `mvn clean test -Dhost=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
-## Run tests on grid (triggered from locally)
-### Setup GRID/nodes
-- [] add steps here (from above)
-### Run Tests
+
+## Option2: Run tests on Docker grid (triggered from locally)
+### `Goal:`
+    - Tests are triggered locally but run on a docker selenium grid
+### `Benefits:`
+    - With minimum setup (just with JDK and maven on machine), anyone can run and scale tests (running on multiple nodes).
+### Step1: Still need local setup 
+    -[] Atleast jdk and maven installed.
+### Step2: Setup GRID/nodes
+
+- Reference: https://github.com/SeleniumHQ/docker-selenium
+- To start Docker in Swarm mode
+    - `docker swarm init` 
+- To deploy selenium Grid
+    - `docker stack deploy -c docker-compose.yml grid`
+- Check if grid is active or not @:
+    - http://localhost:4444/grid/console 
+- List stack with:
+    - `docker stack ls`
+- To list running services with:
+    - `docker service ls` 
+- To scale any service run;
+    - `docker service scale grid_chrome=5` or/and 
+    - `docker service scale grid_firefox=3`
+- Check if grid scaled:
+    - http://localhost:4444/grid/console 
+- Now to run tests:
+    - `mvn clean test -Dhost=grid -Dbrowser=chrome ` 
+- And you can open another powershell window, and in parrallel, run tests on say firefox on the grid
+    - `mvn clean test -Dbrowser=firefox -Dhost=grid` (note: order of parameter doesn't matter)
+- And on the local parrallely, if you wish:
+    - `mvn clean test -Dhost=local -Dbrowser=chrome `
+    - `mvn clean test ` (default is -Dhost=local -Dbrowser=chrome)
+- Stop stack with
+    - `docker stack rm grid`
+
+### Step3: Run Tests on Docker Grid 
 - `mvn clean test -Dhost=grid ` (Default is chrome)
 - `mvn clean test -Dhost=grid -Dbrowser=chrome` 
 - `mvn clean test -Dhost=grid -Dbrowser=firefox` 
+
 ### Troubleshooting (some tips)
-- [] to be added from above
-## Run tests on grid (triggered from docker container)
+- Troubleshooting: 
+    - If you get errors in containes and you are not able to do another mvn clean test, 
+    - then remove stack with
+        - `docker stack rm grid` 
+    - and redeploy the Grid;
+        -  `docker stack deploy -c docker-compose.yml grid`
+- NOTE: If you want to check that, the tests are really running from containers (with containers drivers and not local driver); do this
+    - Remove a driver from tools location (say remove chromedriver.exe from your drivers path (in my case this is: C:\tools\selenium)) and say put this on desktop.
+    - Run a local test without using grid, so say: 
+        - `mvn clean test -Dhost=local  -Dbrowser=chrome`
+        -  This should now fail saying:
+        -  `Cannot find file at 'c:\tools\selenium\chromedriver.exe' (c:\tools\selenium\chromedriver.exe). This usually indicates a missing or moved file.`
+    - Now, run the same test on grid, 
+        - `mvn clean test -Dhost=grid -Dbrowser=chrome`
+        - You will see that tests ran successfully.
+        - This proves that tests are running inside container in grid and not using driver from your local machine. 
+
+## Run tests on Docker grid (triggered from test docker container)
+
+### `Goal:`
+    - Tests triggered from test docker containers.
+    - Tests run in docker grid.
+### `Benefits:`
+    - No local installation needed and anyone can run it from their machine
+
 - [] to be done (after making dockerfile for this project)
 
 # References
