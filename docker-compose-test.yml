@@ -1,14 +1,5 @@
 # Reference: https://github.com/SeleniumHQ/docker-selenium
-# Option A: To run grid and tests via docker-compose (run): 
-  # `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
-# Ctrl+c to exit.
-# Before restart:
-  # `docker container stop $(docker container ls -aq)`
-  # `docker container rm $(docker container ls -aq)`  
-# You can restart again:
-  # `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
-# Option B: To keep this comments in check, instructions to run grid and tests via docker swarm is explained in the file docker-compose-grid.yml
-# file comments.  
+# Refer readme.md file section 'Step3: Test Execution' to see different ways of setting up grid and running tests (using docker-compose and swarm)
 
 version: '3.7'
 services:

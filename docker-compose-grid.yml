@@ -1,5 +1,5 @@
 # Reference: https://github.com/SeleniumHQ/docker-selenium
-# Refer readme.md file section 'Step3: Test Execution' to see different ways of setting up grid (using docker-compose and swarm)
+# Refer readme.md file section 'Step3: Test Execution' to see different ways of setting up grid and running tests (using docker-compose and swarm)
 
 version: '3.7'
 
