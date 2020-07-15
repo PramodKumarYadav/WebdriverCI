@@ -3,39 +3,24 @@
 - VSCode (for GitHub integration and also for running tests in containers - when we get there)
     - Powershell plugin
 
-# Test Execution
-## To run this project (locally)
-Go to the drive location from where you want to run this project. 
-> Run below commands from command line (needs git to be installed).Say
-
-- `cd c:\`
+# Download project (and quick test)
+From command line, run below command in the directory where you want to store this project. 
 - `Git clone https://github.com/PramodKumarYadav/WebdriverCI.git`
 - `cd WebdriverCI`
 - `mvn clean test`
-> This should run the tests and you should now see a target repository created in root. This should now contain reports. 
-in path 'Your root directory'\WebdriverCI\target\surefire-reports
+> This should run the tests and you should now see a target repository created in root. This should now contain reports in path 'Your root directory'\WebdriverCI\target\surefire-reports
 
-> ## Dependencies 
-> (Once we start running tests with (and in) Docker, these dependencies will be removed and reduced only to having Docker desktop installed on your machine) 
-> - GIT installed
-> - JDK installed 
-> - Maven installed 
+## Dependencies 
+Once we start running tests with (and in) Docker, these dependencies will be removed and reduced only to having Docker desktop installed on your machine) 
+- GIT installed
+- JDK installed 
+- Maven installed 
 
-> Versions used
-
+Versions used
 > PS D:\WebdriverCI> java -version
-> - java version "10.0.2" 2018-07-17
-> - Java(TM) SE Runtime Environment 18.3 (build 10.0.2+13)
-> - Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.2+13, mixed mode)
-
+- java version "10.0.2" 2018-07-17
 > PS D:\WebdriverCI> mvn -version 
-> - Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-17T20:33:14+02:00)
-> - Maven home: C:\Program Files\Apache\maven\bin\..
-> - Java version: 10.0.2, vendor: Oracle Corporation, runtime: C:\Program Files\Java\jdk-10.0.2
-> - Default locale: en_US, platform encoding: Cp1252
-> - OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
-
-
+- Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-17T20:33:14+02:00)
 
 # Framework Goals
 - [ ] Clean design
@@ -83,8 +68,10 @@ in path 'Your root directory'\WebdriverCI\target\surefire-reports
 Download latest chrome driver:
 - [Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 
+
 ## Dockerize test framework
 - [maven base image](https://hub.docker.com/_/maven)
+- `Step3: Test Execution` (below), explains how to run tests from (test) docker conatainers - in (grid) docker containers 
 
 # Step2: Design decisions:
 - Tests should be atomic (not dependent on each other)
@@ -94,7 +81,8 @@ Download latest chrome driver:
 - Driver should work with whatever browser is passed to it from outside. 
 - User should be able to set the browser and tests to run, from outside tests; i.e. via command line, CI. In rare cases, if there is a need it should be possible to set the browser from tests however this is a bad practise and must always be avoided. 
 
-# Step3: To run tests from command line (for any browser, local/grid)
+# Step3: Test Execution
+## To run tests from command line (for any browser, local/grid)
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [pass-parameters-from-command-line-to-a-selenium-project-using-maven-command](https://www.google.com/amp/s/eltestor.wordpress.com/2015/09/13/pass-parameters-from-command-line-to-a-selenium-project-using-maven-command/amp/)
 
@@ -118,7 +106,7 @@ Download latest chrome driver:
 ### `Goal:`
     - Tests are triggered locally but run on a docker selenium grid
 ### `Benefits:`
-    - With minimum setup (just with JDK and maven on machine), anyone can run and scale tests (running on multiple nodes).
+    - With minimum local setup (just with JDK and maven on machine), anyone can run and scale tests (running on multiple nodes).
 ### Step1: Still need local setup 
     -[] Atleast jdk and maven installed.
 ### Step2: Setup GRID/nodes
@@ -127,7 +115,7 @@ Download latest chrome driver:
 - To start Docker in Swarm mode
     - `docker swarm init` 
 - To deploy selenium Grid
-    - `docker stack deploy -c docker-compose.yml grid`
+    - `docker stack deploy -c docker-compose-grid.yml grid`
 - Check if grid is active or not @:
     - http://localhost:4444/grid/console 
 - List stack with:
@@ -139,6 +127,7 @@ Download latest chrome driver:
     - `docker service scale grid_firefox=3`
 - Check if grid scaled:
     - http://localhost:4444/grid/console 
+    - `docker service ls` (should see it here too)
 - Now to run tests:
     - `mvn clean test -Dhost=grid -Dbrowser=chrome ` 
 - And you can open another powershell window, and in parrallel, run tests on say firefox on the grid
@@ -160,7 +149,7 @@ Download latest chrome driver:
     - then remove stack with
         - `docker stack rm grid` 
     - and redeploy the Grid;
-        -  `docker stack deploy -c docker-compose.yml grid`
+        -  `docker stack deploy -c docker-compose-grid.yml grid`
 - NOTE: If you want to check that, the tests are really running from containers (with containers drivers and not local driver); do this
     - Remove a driver from tools location (say remove chromedriver.exe from your drivers path (in my case this is: C:\tools\selenium)) and say put this on desktop.
     - Run a local test without using grid, so say: 
@@ -172,15 +161,51 @@ Download latest chrome driver:
         - You will see that tests ran successfully.
         - This proves that tests are running inside container in grid and not using driver from your local machine. 
 
-## Run tests on Docker grid (triggered from test docker container)
+## Option3: Run tests on Docker grid (triggered from test docker container)
 
 ### `Goal:`
-    - Tests triggered from test docker containers.
-    - Tests run in docker grid.
+    - Tests triggered from docker container - test.
+    - Tests run in docker container - grid.
 ### `Benefits:`
     - No local installation needed and anyone can run it from their machine
 
-- [] to be done (after making dockerfile for this project)
+## OptionA: Run tests using docker-compose
+- To run grid and tests via docker-compose (run): 
+    - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
+- Ctrl+c to exit.
+- Before restart:
+    - `docker container stop $(docker container ls -aq)` (stop all containers - running and exited)
+    - `docker container rm $(docker container ls -aq)` (remove all containers - running and exited)  
+- You can now restart again:
+    - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
+
+## OptionB: Run tests using docker swarm
+### Step1: Create a combined stack.yml file to deploy both tests and grid together
+> A combined file is now created using docker-compose-grid.yml and docker-compose-test.yml :
+- `docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml --log-level ERROR config > stack.yml`
+ 
+### Step2: Setup GRID-nodes and run test-nodes
+- Reference: https://github.com/SeleniumHQ/docker-selenium
+> All the commands mentioned in Option2 for using docker swarm can be used here. 
+
+> Only commands specific to this workflow are mentioned here. 
+- To start Docker in Swarm mode
+    - `docker swarm init` 
+- To deploy selenium Grid
+    - `docker stack deploy -c stack.yml grid`
+- Check if grid is active or not @:
+    - http://localhost:4444/grid/console 
+- List stack with:
+    - `docker stack ls`
+- To list running services with:
+    - `docker service ls` 
+- To check the logs of test container
+    - `docker service logs --follow grid_test-chrome`
+    - You can now see the results of test and that the container is still alive. 
+    - You can also see the results in IntelliJ (or vscode): target-> surefire-reports-> ...(here)
+- Stop stack with
+    - `docker stack rm grid`
+
 
 # References
 - [Official selenium docs](https://www.selenium.dev/documentation/en/)
