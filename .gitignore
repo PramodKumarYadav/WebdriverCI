@@ -12,3 +12,7 @@ temp
 
 # vscode
 .vscode
+
+# Docker files(temporary)
+stack.yml
+
