@@ -76,14 +76,17 @@ Download latest chrome driver:
 - [maven base image](https://hub.docker.com/_/maven)
 - `Step3: Test Execution` (below), explains how to run (test) docker conatainers - in (grid) docker containers. 
 
-# Step3: Test Design (decisions):
+# Step3: Test Design:
+Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - reports(Html human redable/CI parseable)
+- [ ] Later to also add actual test design diagram here. 
+- [ ] revisit this section later.
 - Tests should be atomic (not dependent on each other)
 - Tests should run in parrallel.
     - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
 - Tests should be browser agnostic and should only care about testing the application.
 - Driver should work with whatever browser is passed to it from outside. 
 - User should be able to set the browser and tests to run, from outside tests; i.e. via command line, CI. In rare cases, if there is a need it should be possible to set the browser from tests however this is a bad practise and must always be avoided. 
-- [ ] Later to also add actual test design diagram here. 
+
 
 # Step4: Test Execution
 ## To run tests from command line (for any browser, local/grid)
