@@ -1,8 +1,3 @@
-# Tools (Recommended)
-- IntelliJ (for building tests)
-- VSCode (for GitHub integration and also for running tests in containers - when we get there)
-    - Powershell plugin
-
 # Download project (and quick test)
 From command line, run below command in the directory where you want to store this project. 
 - `Git clone https://github.com/PramodKumarYadav/WebdriverCI.git`
@@ -22,6 +17,7 @@ Versions used
 > PS D:\WebdriverCI> mvn -version 
 - Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-17T20:33:14+02:00)
 
+# Todo: combine framework goals and test objectives (I see similarites here)
 # Framework Goals
 - [ ] Clean design
     - [X] Tests should be agnostic of browser. i.e. Tests should only have context about tseting the app (no reference to browser).
@@ -36,14 +32,6 @@ Versions used
 - [ ] Use of CI to run tests with each merge in master
 - [ ] Use of reports (html) & CI parceable
 
-
-# Design components
-- Step1: Test Environment setup (using dockers)
-- Step2: Design should be clean and should allow for easy CI/manual switch.
-- Step3: Run tests from CI (automated scheduled or triggered). Or manually: from command line.
-- Step4: Version control tests in Git (any server such as Github).
-- Step5: Reports (For both CI-parceable and humans - html)
-
 # Test objectives
 - Tests should be atomic and not dependent on other tests.
     - To increase speed of execution.
@@ -54,16 +42,31 @@ Versions used
     - Should eliminate duplication.       
         - by seperating intent from implementation (intent in controller/test classes vs implementation in tools/pageobject classes).
         - by using page object model.
-        - by seperating tests from general purpose code.
-    - 
+        - by seperating tests from general purpose code. 
 - Tests should be quick to run.
     - This should allow quick feedback to dev/test teams.
 - Tests should be scaleable without impacting overall execution time.
     - One way is to run tests in parrallel to achieve this.
     - This should encourage users to add more tests and not discourage. 
-- 
+
+# Design components
+- Step1: Test Environment setup (using dockers)
+- Step2: Design should be clean and should allow for easy CI/manual switch.
+- Step3: Run tests from CI (automated scheduled or triggered). Or manually: from command line.
+- Step4: Version control tests in Git (any server such as Github).
+- Step5: Reports (For both CI-parceable and humans - html)
 
 # Step1: Test Environment setup 
+## Generic Tools (Recommended)
+- IntelliJ 
+    - For building/maintaining tests.
+    - For running tests locally.
+- VSCode 
+    - For GitHub integration (has a smooth UI) 
+    - For running testing inside containers (have good remote container plugin)
+    - For Powershell ease of use. 
+- Docker-Desktop
+
 ## Manual setup (Without dockers)
 Download latest chrome driver:
 - [Download chrome driver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
@@ -71,15 +74,16 @@ Download latest chrome driver:
 
 ## Dockerize test framework
 - [maven base image](https://hub.docker.com/_/maven)
-- `Step3: Test Execution` (below), explains how to run tests from (test) docker conatainers - in (grid) docker containers 
+- `Step3: Test Execution` (below), explains how to run (test) docker conatainers - in (grid) docker containers. 
 
-# Step2: Design decisions:
+# Step2: Test Design (decisions):
 - Tests should be atomic (not dependent on each other)
 - Tests should run in parrallel.
     - [Some best practices recommendations by Nikolay](https://ultimateqa.com/automation-patterns-antipatterns/?utm_sq=g6eq8wpdyo&utm_source=LinkedIn&utm_medium=social&utm_campaign=NikolayAdvolodkin&utm_content=OwnBlogPosts#bdd)
 - Tests should be browser agnostic and should only care about testing the application.
 - Driver should work with whatever browser is passed to it from outside. 
 - User should be able to set the browser and tests to run, from outside tests; i.e. via command line, CI. In rare cases, if there is a need it should be possible to set the browser from tests however this is a bad practise and must always be avoided. 
+- [ ] Later to also add actual test design diagram here. 
 
 # Step3: Test Execution
 ## To run tests from command line (for any browser, local/grid)
@@ -206,6 +210,10 @@ Download latest chrome driver:
 - Stop stack with
     - `docker stack rm grid`
 
+# Step4: Version control tests in Git (any server such as Github).
+- [] to be added
+# Step5: Reports (For both CI-parceable and humans - html)
+- [] to be added
 
 # References
 - [Official selenium docs](https://www.selenium.dev/documentation/en/)
