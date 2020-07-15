@@ -1,5 +1,5 @@
 # Set selenium grid using docker swarm
-function Set-DockerSeleniumGrid {
+function Set-SwarmGrid {
     [CmdletBinding()]
 	param(
             [String]$Path = "./docker-compose-grid.yml"
@@ -12,19 +12,19 @@ function Set-DockerSeleniumGrid {
     docker service ls
 }
 
-function Remove-DockerSeleniumGrid {
+function Remove-SwarmGrid {
     [CmdletBinding()]
 	param(
             [String]$Path 
         )
     
-    # remove selenium grid
+    # remove  grid
     docker stack ls
     docker stack rm grid
     docker stack ls
 }
 
-function Set-DockerSeleniumGridAndTests {
+function Set-SwarmGridAndTests {
     [CmdletBinding()]
 	param(
         )
@@ -38,7 +38,7 @@ function Set-DockerSeleniumGridAndTests {
     docker service logs --follow grid_test-chrome
 }
 
-function Start-TestsUsingDockerCompose {
+function Start-ComposeGridAndTests{
     [CmdletBinding()]
 	param(
         )
@@ -47,7 +47,7 @@ function Start-TestsUsingDockerCompose {
     docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up
 }
 
-function Remove-AllContainers {
+function Remove-AllDockerContainers {
     [CmdletBinding()]
 	param(
         )
