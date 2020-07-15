@@ -104,10 +104,10 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 
 ### Step2: Run Tests locally
 - `mvn clean test ` (Default env is local and defaulut browser is chrome)
-- `mvn clean test -Dhost=local -Dbrowser=chrome ` (Same as default)
-- `mvn clean test -Dbrowser=firefox ` (To run tests in firefox; default host is local)
+- `mvn clean test -Dserver=local -Dclient=local -Dbrowser=chrome ` (Same as default)
+- `mvn clean test -Dbrowser=firefox ` (To run tests in firefox; default server is local, client is local)
 - `mvn clean test -Dtest=MavenTest ` (To run tests only for test class MavenTest. Defaults are local, chrome)
-- `mvn clean test -Dhost=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
+- `mvn clean test -Dserver=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
 
 ## Option2: Run tests on Docker grid (triggered from locally)
 ### `Goal:`
@@ -136,19 +136,19 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
     - http://localhost:4444/grid/console 
     - `docker service ls` (should see it here too)
 - Now to run tests:
-    - `mvn clean test -Dhost=grid -Dbrowser=chrome ` 
+    - `mvn clean test -Dserver=grid -Dclient=local -Dbrowser=chrome ` 
 - And you can open another powershell window, and in parrallel, run tests on say firefox on the grid
-    - `mvn clean test -Dbrowser=firefox -Dhost=grid` (note: order of parameter doesn't matter)
+    - `mvn clean test -Dbrowser=firefox -Dserver=grid` (note: order of parameter doesn't matter; default -Dclient=local )
 - And on the local parrallely, if you wish:
-    - `mvn clean test -Dhost=local -Dbrowser=chrome `
-    - `mvn clean test ` (default is -Dhost=local -Dbrowser=chrome)
+    - `mvn clean test -Dbrowser=firefox `
+    - `mvn clean test ` (default is -Dserver=local -Dclient=local -Dbrowser=chrome)
 - Stop stack with
     - `docker stack rm grid`
 
 ### Step3: Run Tests on Docker Grid 
-- `mvn clean test -Dhost=grid ` (Default is chrome)
-- `mvn clean test -Dhost=grid -Dbrowser=chrome` 
-- `mvn clean test -Dhost=grid -Dbrowser=firefox` 
+- `mvn clean test -Dserver=grid ` (Default is chrome, -Dclient=local)
+- `mvn clean test -Dserver=grid -Dclient=local -Dbrowser=chrome` 
+- `mvn clean test -Dserver=grid -Dclient=local -Dbrowser=firefox` 
 
 ### Troubleshooting (some tips)
 - Troubleshooting: 
@@ -160,11 +160,11 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - NOTE: If you want to check that, the tests are really running from containers (with containers drivers and not local driver); do this
     - Remove a driver from tools location (say remove chromedriver.exe from your drivers path (in my case this is: C:\tools\selenium)) and say put this on desktop.
     - Run a local test without using grid, so say: 
-        - `mvn clean test -Dhost=local  -Dbrowser=chrome`
+        - `mvn clean test -Dbrowser=chrome` (default is -Dserver=local -Dclient=local )
         -  This should now fail saying:
         -  `Cannot find file at 'c:\tools\selenium\chromedriver.exe' (c:\tools\selenium\chromedriver.exe). This usually indicates a missing or moved file.`
     - Now, run the same test on grid, 
-        - `mvn clean test -Dhost=grid -Dbrowser=chrome`
+        - `mvn clean test -Dserver=grid -Dbrowser=chrome` (default is -Dclient=local )
         - You will see that tests ran successfully.
         - This proves that tests are running inside container in grid and not using driver from your local machine. 
 

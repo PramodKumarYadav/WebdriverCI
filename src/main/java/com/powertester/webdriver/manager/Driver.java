@@ -25,23 +25,27 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class Driver extends Properties implements WebDriver {
     WebDriver driver;
-    String host;
+    String server;
+    String client;
     String browser;
     URL gridURL;
 
     public Driver() {
-        this(getHost(), getBrowser());
+        this(getServer(), getClient(), getBrowser());
     }
 
-    public Driver(String host, String browser) {
+    public Driver(String server,  String client, String browser) {
 
-        this.host = host;
-        System.out.println("host property passed to driver: " + host);
+        this.server = server;
+        System.out.println("server property passed to driver: " + server);
+        
+        this.client = client;
+        System.out.println("client property passed to driver: " + client);
 
         this.browser = browser;
         System.out.println("browser property passed to driver: " + browser);
 
-        switch (host.toLowerCase()) {
+        switch (server.toLowerCase()) {
             case "local":
                 if (browser.equalsIgnoreCase("chrome")) {
                     this.driver = new ChromeDriver();
@@ -59,8 +63,21 @@ public class Driver extends Properties implements WebDriver {
                     this.driver = new HtmlUnitDriver(true);
                 }
                 break;
-            case "grid":
-                String gridAddress = "http://localhost:4444/wd/hub";            
+            case "grid":   
+                // This variable holds the value of grid url. 
+                // From local (as client) grid is accessible on localhost:4444. From container (as client), you can access grid by container name:4444.
+                String gridAddress = "";  
+                
+                // When calling tests on docker container hub (server) from local machine (as client)
+                if (client.equalsIgnoreCase("local"))  {
+                    gridAddress = "http://localhost:4444/wd/hub"; 
+                }
+
+                // When calling tests on docker container hub (server) from docker container (as client)
+                if (client.equalsIgnoreCase("docker"))  {
+                    gridAddress = "http://hub:4444/wd/hub"; 
+                }                       
+                
                 try {
                     this.gridURL = new URL(gridAddress);
                 } catch (MalformedURLException e) {

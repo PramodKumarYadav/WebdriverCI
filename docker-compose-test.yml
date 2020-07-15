@@ -13,5 +13,5 @@ services:
     depends_on:
       - hub
       - chrome      
-    command: sh -c "mvn clean test -Dhost=grid -Dbrowser=chrome -Dmaven.test.failure.ignore=true
+    command: sh -c "mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome -Dmaven.test.failure.ignore=true
         && tail -f /dev/null"
