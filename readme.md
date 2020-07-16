@@ -93,11 +93,13 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [pass-parameters-from-command-line-to-a-selenium-project-using-maven-command](https://www.google.com/amp/s/eltestor.wordpress.com/2015/09/13/pass-parameters-from-command-line-to-a-selenium-project-using-maven-command/amp/)
 
-## Option1: Run tests locally
+## Option1: Run tests locally [Client: localmachine; Server: localmachine]
 ### `Goal:`
     -  Tests are triggered and run locally
 ### `Benefits:`
-    - An option for easy local debugging and building scripts. 
+    - Best option for easy local debugging and building scripts. 
+    - Cons is everyone needs to have all the softwares, env variables setup for tests to run.
+    - Can lead to - runs on my machine, not on yours kind of issues. 
 
 ### Step1: Install drivers and setup system path variables
 - [] write instructions here or give link to the section
@@ -109,8 +111,149 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - `mvn clean test -Dtest=MavenTest ` (To run tests only for test class MavenTest. Defaults are local, chrome)
 - `mvn clean test -Dserver=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
 
-## Option2: Run tests on Docker grid (triggered from locally)
+## Option2: Run tests on a docker container [Client: docker container; Server: same docker container]
 ### `Goal:`
+    -  Tests are triggered and run in docker container
+### `Benefits:`
+    - Anyone can run using dockerfile(image when we have image directory).
+    - You dont need local setup for this to work (except docker desktop).
+    - Eliminates problem of works on my machine, not on yours.
+    - Cons is, we are still not able to scale our tests (for distributed execution)
+
+### Step1: Build an image from dockerfile and run tests on this container
+- Build a image from dockerfile using docker-compose (this takes care of mapping your test framework to container)
+    - `docker-compose -f .\docker-compose-test.yml up`
+    - `docker container ls` (list container to see if it is up. and now you can get its id/name)
+    - `docker container exec -it test bash` (enter in the container)
+    - `mvn clean test -Dclient=docker`
+    - This will give you successful results as below (we expect one test to fail and one to pass)
+    - Note: You will still get a bind failure error but you will see that the tests have run succesfully. 
+``` [INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running BadMavenTest
+System property key:server; value: local
+System property key:client; value: local
+System property key:browser; value: chrome
+server property passed to driver: local
+client property passed to driver: docker
+browser property passed to driver: chrome
+Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/4147@{#310}) on port 26362
+Only local connections are allowed.
+Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+ChromeDriver was started successfully.
+[1594910042.375][SEVERE]: bind() failed: Cannot assign requested address (99)
+Jul 16, 2020 2:34:03 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.962 s <<< FAILURE! - in BadMavenTest
+[ERROR] test1(BadMavenTest)  Time elapsed: 4.832 s  <<< FAILURE!
+java.lang.AssertionError:
+
+Expected: is "Vancouver Public Library 3 |"
+     but: was "Vancouver Public Library |"
+        at BadMavenTest.test1(BadMavenTest.java:56)
+
+[INFO] Running MavenTest
+System property key:server; value: local
+System property key:client; value: local
+System property key:browser; value: chrome
+server property passed to driver: local
+client property passed to driver: docker
+browser property passed to driver: chrome
+Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/41[1594910046.654][SEVERE]: bind() failed: Cannot assign requested address (99)
+47@{#310}) on port 3767
+Only local connections are allowed.
+Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+ChromeDriver was started successfully.
+Jul 16, 2020 2:34:06 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.261 s - in MavenTest
+[INFO] 
+[INFO] Results:
+[INFO]
+[ERROR] Failures: 
+[ERROR]   BadMavenTest.test1:56 
+Expected: is "Vancouver Public Library 3 |"
+     but: was "Vancouver Public Library |"
+[INFO]
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.945 s
+[INFO] Finished at: 2020-07-16T14:34:10Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.1:test (default-test) on project WebdriverCI: There are test failures.
+[ERROR]
+[ERROR] Please refer to /usr/src/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+```
+- To build the image from dockerfile and then do the hard work seperately, use below commands
+    - `docker image build -t test .   `
+    - `docker run --rm -it -v ${PWD}:/usr/src -w /usr/src test mvn clean test -Dclient=docker` (here we have to map the volumes, set working directory on the container for image test)
+    - You will get a successful test result (expected one test to fail and one to pass). Actual logs below:
+```
+[INFO] Results:
+[INFO]
+[ERROR] Failures: 
+[ERROR]   BadMavenTest.test1:56 
+Expected: is "Vancouver Public Library 3 |"
+     but: was "Vancouver Public Library |"
+[INFO]
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+```
+
+### Troubleshooting (some tips)
+- From the container, if you forget to give option that the client is docker, So say if you run
+    - `mvn clean test` (Defaults are -Dclient=local, -Dserver=local, -Dbrowser=chrome)
+    - You will get errors as below. 
+``` INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running BadMavenTest
+System property key:server; value: local
+System property key:client; value: local
+System property key:browser; value: chrome
+server property passed to driver: local
+client property passed to driver: local
+browser property passed to driver: chrome
+[1594909076.152][Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/4147@{#310}) on port 31549
+Only local connections are allowed.
+Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+ChromeDriver was started successfully.
+SEVERE]: bind() failed: Cannot assign requested address (99)
+[ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 1.412 s <<< FAILURE! - in BadMavenTest
+[ERROR] test1(BadMavenTest)  Time elapsed: 1.276 s  <<< ERROR!
+org.openqa.selenium.WebDriverException: 
+unknown error: Chrome failed to start: exited abnormally.
+  (unknown error: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location /usr/bin/google-chrome is no longer running, so ChromeDriver is assuming that Chrome has crashed.)       
+Build info: version: '3.141.59', revision: 'e82be7d358', time: '2018-11-14T08:17:03'
+System info: host: 'f997b82b2e30', ip: '172.25.0.2', os.name: 'Linux', os.arch: 'amd64', os.version: '4.19.76-linuxkit', java.version: '1.8.0_252'   
+Driver info: driver.version: Driver
+remote stacktrace: #0 0x55854c67bea9 <unknown>
+```
+> This is because, we dont have the capabilites in the container to run it with chrome launched. We handle this by running the chrome browser in a headless mode (check the Driver.java class for option Server=Local, client=Docker; line: options.setHeadless(true); ) 
+- So if you run the tests with option for client as docker, you will get the tests executed successfully (as we saw above):
+    - `mvn clean test -Dclient=docker`
+    
+
+### Step2: Run Tests locally
+- `mvn clean test -Dclient=docker ` (Default env is local and default browser is chrome)
+- `mvn clean test -Dserver=local -Dclient=docker -Dbrowser=chrome ` (Same as default)
+- `mvn clean test -Dclient=docker -Dbrowser=chrome ` (at this moment, only can run chrome tests in container(server). You can run other browsers in a grid setup. Later to add this as well)
+
+## Option3: Run tests on Docker grid [Client: local ; Server: grid ]
     - Tests are triggered locally but run on a docker selenium grid
 ### `Benefits:`
     - With minimum local setup (just with JDK and maven on machine), anyone can run and scale tests (running on multiple nodes).
@@ -168,7 +311,7 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
         - You will see that tests ran successfully.
         - This proves that tests are running inside container in grid and not using driver from your local machine. 
 
-## Option3: Run tests on Docker grid (triggered from test docker container)
+## Option3: Run tests on Docker grid [Client: docker container; Server: grid]
 
 ### `Goal:`
     - Tests triggered from docker container - test.
@@ -185,6 +328,8 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
     - `docker container rm $(docker container ls -aq)` (remove all containers - running and exited)  
 - You can now restart again:
     - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
+    - Enter into the test container and execute using:
+    - `docker container exec -it test mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome`
 
 ## OptionB: Run tests using docker swarm
 ### Step1: Create a combined stack.yml file to deploy both tests and grid together
@@ -205,9 +350,11 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - List stack with:
     - `docker stack ls`
 - To list running services with:
-    - `docker service ls` 
+    - `docker service ls`
+- Enter into the test container and execute using:
+    - `docker container exec -it 'container-name-here' mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome`
 - To check the logs of test container
-    - `docker service logs --follow grid_test-chrome`
+    - `docker service logs --follow grid_test`
     - You can now see the results of test and that the container is still alive. 
     - You can also see the results in IntelliJ (or vscode): target-> surefire-reports-> ...(here)
 - Stop stack with
