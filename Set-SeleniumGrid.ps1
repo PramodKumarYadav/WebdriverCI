@@ -1,3 +1,7 @@
+# To work with below scripts, first dot import them and then call any fn. Ex:
+    #  . .\Set-SeleniumGrid.ps1
+    # Start-ComposeGridAndTests
+    
 # Set selenium grid using docker swarm
 function Set-SwarmGrid {
     [CmdletBinding()]
