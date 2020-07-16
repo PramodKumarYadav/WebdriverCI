@@ -48,7 +48,11 @@ public class Driver extends Properties implements WebDriver {
         switch (server.toLowerCase()) {
             case "local":
                 if (browser.equalsIgnoreCase("chrome")) {
-                    this.driver = new ChromeDriver();
+                    ChromeOptions options = new ChromeOptions();
+                    if (client.equalsIgnoreCase("docker"))  {
+                        options.setHeadless(true);    
+                    }        
+                    this.driver = new ChromeDriver(options);
                 }
 
                 if (browser.equalsIgnoreCase("firefox")) {
