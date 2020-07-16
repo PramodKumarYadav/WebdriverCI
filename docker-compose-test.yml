@@ -1,17 +1,18 @@
 # Reference: https://github.com/SeleniumHQ/docker-selenium
 # Refer readme.md file section 'Step3: Test Execution' to see different ways of setting up grid and running tests (using docker-compose and swarm)
+# command: sh -c "mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome -Dmaven.test.failure.ignore=true
+#     && tail -f /dev/null"
 
 version: '3.7'
 services:
-  test-chrome:
-    image: maven:3-jdk-8
-    working_dir: '/test'
+  test:
+    build: .
+    image: test-chrome:mvn-3-jdk-8
+    container_name: test
+    working_dir: '/usr/src'
     volumes:
-      - "./:/test"
+      - "./:/usr/src"
+      - /dev/shm:/dev/shm
     deploy:
-      replicas: 1
-    depends_on:
-      - hub
-      - chrome      
-    command: sh -c "mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome -Dmaven.test.failure.ignore=true
-        && tail -f /dev/null"
+      replicas: 1  
+    command: sh -c "echo 'ready to test' && tail -f /dev/null"
