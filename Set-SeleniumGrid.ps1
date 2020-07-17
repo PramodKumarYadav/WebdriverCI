@@ -35,7 +35,7 @@ function Set-SwarmGridAndTests {
     
     # list of all steps to run while setting up grid and tests
     docker swarm init
-    docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml --log-level ERROR config > stack.yml
+    docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml -f ./docker-compose-test-depend-on-grid.yml --log-level ERROR config > stack.yml
     docker stack deploy -c stack.yml grid
     docker stack ls
     docker service ls
@@ -48,7 +48,7 @@ function Start-ComposeGridAndTests{
         )
     
     # override docker compose grid with test details.
-    docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up
+    docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml -f ./docker-compose-test-depend-on-grid.yml up
 }
 
 function Remove-AllDockerContainers {
