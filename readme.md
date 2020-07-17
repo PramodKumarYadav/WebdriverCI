@@ -386,8 +386,9 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 - Stop stack with
     - `docker stack rm grid`
 
-# Step5: Version control tests in Git (any host such as Github).
-- [] to be added
+# Step5: Version control tests in Git.
+- In this case, its easy. Version control is done in git here. 
+
 # Step6: Reports (For both CI-parceable and humans - html)
 - [] to be added
 
