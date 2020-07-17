@@ -12,7 +12,7 @@ From command line, run below command in the directory where you want to store th
 - Step2: Test Environment setup (using dockers)
 - Step3: Design should be clean and should allow for easy CI/manual switch.
 - Step4: Run tests from CI (automated scheduled or triggered). Or manually: from command line.
-- Step5: Version control tests in Git (any server such as Github).
+- Step5: Version control tests in Git (any host such as Github).
 - Step6: Reports (For both CI-parceable and humans - html)
 
 # Step1: Test objectives
@@ -61,11 +61,12 @@ Once we start running tests with (and in) Docker, these dependencies will be rem
 - JDK installed 
 - Maven installed 
 
-Versions used
-> PS D:\WebdriverCI> java -version
+```Versions used
+PS D:\WebdriverCI> java -version
 - java version "10.0.2" 2018-07-17
-> PS D:\WebdriverCI> mvn -version 
+PS D:\WebdriverCI> mvn -version 
 - Apache Maven 3.5.4 (1edded0938998edf8bf061f1ceb3cfdeccf443fe; 2018-06-17T20:33:14+02:00)
+```
 
 ## Manual setup (Without dockers)
 Download latest chrome driver:
@@ -93,7 +94,30 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - [how-to-run-scripts-in-a-specific-browser-with-maven](https://seleniumjava.com/2017/05/21/how-to-run-scripts-in-a-specific-browser-with-maven/amp/)
 - [pass-parameters-from-command-line-to-a-selenium-project-using-maven-command](https://www.google.com/amp/s/eltestor.wordpress.com/2015/09/13/pass-parameters-from-command-line-to-a-selenium-project-using-maven-command/amp/)
 
-## Option1: Run tests locally [Client: localmachine; Server: localmachine]
+## A quick summary of execution Modes
+Properties called from command line are [`host, browser, accessGridFrom(only relevant for grid mode)`]
+```
+Case1: To Run tests on local 
+    mvn clean test (defaults to -Dhost=local -Dbrowser=chrome )
+    mvn clean test -Dbrowser=firefox (To run tests in firefox; defaults to -Dhost=local)
+    mvn clean test -Dhost=local -Dbrowser=chrome (same as default)
+    mvn clean test -Dhost=local -Dbrowser=chrome -Dtest=MavenTest (To run tests in chrome only for test class MavenTest)
+
+Case2: To Run tests on test container 
+    mvn clean test -Dhost=container -Dbrowser=chrome 
+    mvn clean test -Dhost=container -Dbrowser=firefox 
+
+Case3: To Run tests on grid 
+    CaseA: To run tests on grid from local host
+    mvn clean test -Dhost=grid -Dbrowser=chrome (-DaccessGridFrom=local is default)
+    mvn clean test -Dhost=grid -DaccessGridFrom=local -Dbrowser=firefox 
+
+    CaseA: To run tests on grid from test container
+    mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome
+    mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=firefox 
+```
+
+## Option1: Run tests locally [host: local]
 ### `Goal:`
     -  Tests are triggered and run locally
 ### `Benefits:`
@@ -105,13 +129,13 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - [] write instructions here or give link to the section
 
 ### Step2: Run Tests locally
-- `mvn clean test ` (Default env is local and defaulut browser is chrome)
-- `mvn clean test -Dserver=local -Dclient=local -Dbrowser=chrome ` (Same as default)
-- `mvn clean test -Dbrowser=firefox ` (To run tests in firefox; default server is local, client is local)
+- `mvn clean test ` (Default host is local and default browser is chrome)
+- `mvn clean test -Dhost=local -Dbrowser=chrome ` (Same as default)
+- `mvn clean test -Dbrowser=firefox ` (To run tests in firefox; default host is local)
 - `mvn clean test -Dtest=MavenTest ` (To run tests only for test class MavenTest. Defaults are local, chrome)
-- `mvn clean test -Dserver=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
+- `mvn clean test -Dhost=local -Dbrowser=firefox -Dtest=MavenTest ` (To run tests in firefox for only test class MavenTest)
 
-## Option2: Run tests on a docker container [Client: docker container; Server: same docker container]
+## Option2: Run tests on a docker test container [host: container]
 ### `Goal:`
     -  Tests are triggered and run in docker container
 ### `Benefits:`
@@ -125,18 +149,18 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
     - `docker-compose -f .\docker-compose-test.yml up`
     - `docker container ls` (list container to see if it is up. and now you can get its id/name)
     - `docker container exec -it test bash` (enter in the container)
-    - `mvn clean test -Dclient=docker`
+    - `mvn clean test -Dhost=container`
     - This will give you successful results as below (we expect one test to fail and one to pass)
     - Note: You will still get a bind failure error but you will see that the tests have run succesfully. 
 ``` [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running BadMavenTest
-System property key:server; value: local
-System property key:client; value: local
+System property key:host; value: local
+System property key:accessGridFrom; value: local
 System property key:browser; value: chrome
-server property passed to driver: local
-client property passed to driver: docker
+host property passed to driver: local
+accessGridFrom property passed to driver: docker
 browser property passed to driver: chrome
 Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/4147@{#310}) on port 26362
 Only local connections are allowed.
@@ -154,11 +178,11 @@ Expected: is "Vancouver Public Library 3 |"
         at BadMavenTest.test1(BadMavenTest.java:56)
 
 [INFO] Running MavenTest
-System property key:server; value: local
-System property key:client; value: local
+System property key:host; value: local
+System property key:accessGridFrom; value: local
 System property key:browser; value: chrome
-server property passed to driver: local
-client property passed to driver: docker
+host property passed to driver: local
+accessGridFrom property passed to driver: docker
 browser property passed to driver: chrome
 Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/41[1594910046.654][SEVERE]: bind() failed: Cannot assign requested address (99)
 47@{#310}) on port 3767
@@ -198,7 +222,7 @@ Expected: is "Vancouver Public Library 3 |"
 ```
 - To build the image from dockerfile and then do the hard work seperately, use below commands
     - `docker image build -t test .   `
-    - `docker run --rm -it -v ${PWD}:/usr/src -w /usr/src test mvn clean test -Dclient=docker` (here we have to map the volumes, set working directory on the container for image test)
+    - `docker run --rm -it -v ${PWD}:/usr/src -w /usr/src test mvn clean test -Dhost=container` (here we have to map the volumes, set working directory on the container for image test)
     - You will get a successful test result (expected one test to fail and one to pass). Actual logs below:
 ```
 [INFO] Results:
@@ -213,19 +237,19 @@ Expected: is "Vancouver Public Library 3 |"
 ```
 
 ### Troubleshooting (some tips)
-- From the container, if you forget to give option that the client is docker, So say if you run
-    - `mvn clean test` (Defaults are -Dclient=local, -Dserver=local, -Dbrowser=chrome)
+- From the container, if you forget to give option that the host is container, So say if you run
+    - `mvn clean test` (Defaults are -Dhost=local, -Dbrowser=chrome)
     - You will get errors as below. 
 ``` INFO]
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running BadMavenTest
-System property key:server; value: local
-System property key:client; value: local
+System property key:host; value: local
+System property key:accessGridFrom; value: local
 System property key:browser; value: chrome
-server property passed to driver: local
-client property passed to driver: local
+host property passed to driver: local
+accessGridFrom property passed to driver: local
 browser property passed to driver: chrome
 [1594909076.152][Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/4147@{#310}) on port 31549
 Only local connections are allowed.
@@ -243,17 +267,16 @@ System info: host: 'f997b82b2e30', ip: '172.25.0.2', os.name: 'Linux', os.arch: 
 Driver info: driver.version: Driver
 remote stacktrace: #0 0x55854c67bea9 <unknown>
 ```
-> This is because, we dont have the capabilites in the container to run it with chrome launched. We handle this by running the chrome browser in a headless mode (check the Driver.java class for option Server=Local, client=Docker; line: options.setHeadless(true); ) 
-- So if you run the tests with option for client as docker, you will get the tests executed successfully (as we saw above):
-    - `mvn clean test -Dclient=docker`
+> This is because, we dont have the capabilites in the container to run it with chrome launched. We handle this by running the chrome browser in a headless mode (check the Driver.java class for option host=container, line: options.setHeadless(true); ) 
+- So if you run the tests with option for host as container, you will get the tests executed successfully (as we saw above):
+    - `mvn clean test -Dhost=container`
     
 
 ### Step2: Run Tests locally
-- `mvn clean test -Dclient=docker ` (Default env is local and default browser is chrome)
-- `mvn clean test -Dserver=local -Dclient=docker -Dbrowser=chrome ` (Same as default)
-- `mvn clean test -Dclient=docker -Dbrowser=chrome ` (at this moment, only can run chrome tests in container(server). You can run other browsers in a grid setup. Later to add this as well)
+- `mvn clean test -Dhost=container ` (Default host is local and default browser is chrome)
+- `mvn clean test -Dhost=container -Dbrowser=chrome ` (at this moment, only can run chrome tests in container(host). You can run other browsers in a grid setup. Later to add this as well)
 
-## Option3: Run tests on Docker grid [Client: local ; Server: grid ]
+## Option3: Run tests on Docker grid from local [host: grid ; accessGridFrom=local]
     - Tests are triggered locally but run on a docker selenium grid
 ### `Benefits:`
     - With minimum local setup (just with JDK and maven on machine), anyone can run and scale tests (running on multiple nodes).
@@ -279,19 +302,19 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
     - http://localhost:4444/grid/console 
     - `docker service ls` (should see it here too)
 - Now to run tests:
-    - `mvn clean test -Dserver=grid -Dclient=local -Dbrowser=chrome ` 
+    - `mvn clean test -Dhost=grid -DaccessGridFrom=local -Dbrowser=chrome ` 
 - And you can open another powershell window, and in parrallel, run tests on say firefox on the grid
-    - `mvn clean test -Dbrowser=firefox -Dserver=grid` (note: order of parameter doesn't matter; default -Dclient=local )
+    - `mvn clean test -Dbrowser=firefox -Dhost=grid` (note: order of parameter doesn't matter; default -DaccessGridFrom=local )
 - And on the local parrallely, if you wish:
     - `mvn clean test -Dbrowser=firefox `
-    - `mvn clean test ` (default is -Dserver=local -Dclient=local -Dbrowser=chrome)
+    - `mvn clean test ` (default is -Dhost=local -Dbrowser=chrome)
 - Stop stack with
     - `docker stack rm grid`
 
 ### Step3: Run Tests on Docker Grid 
-- `mvn clean test -Dserver=grid ` (Default is chrome, -Dclient=local)
-- `mvn clean test -Dserver=grid -Dclient=local -Dbrowser=chrome` 
-- `mvn clean test -Dserver=grid -Dclient=local -Dbrowser=firefox` 
+- `mvn clean test -Dhost=grid ` (Default is chrome, -DaccessGridFrom=local)
+- `mvn clean test -Dhost=grid -DaccessGridFrom=local -Dbrowser=chrome` 
+- `mvn clean test -Dhost=grid -DaccessGridFrom=local -Dbrowser=firefox` 
 
 ### Troubleshooting (some tips)
 - Troubleshooting: 
@@ -303,15 +326,15 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 - NOTE: If you want to check that, the tests are really running from containers (with containers drivers and not local driver); do this
     - Remove a driver from tools location (say remove chromedriver.exe from your drivers path (in my case this is: C:\tools\selenium)) and say put this on desktop.
     - Run a local test without using grid, so say: 
-        - `mvn clean test -Dbrowser=chrome` (default is -Dserver=local -Dclient=local )
+        - `mvn clean test -Dbrowser=chrome` (default is -Dhost=local -DaccessGridFrom=local )
         -  This should now fail saying:
         -  `Cannot find file at 'c:\tools\selenium\chromedriver.exe' (c:\tools\selenium\chromedriver.exe). This usually indicates a missing or moved file.`
     - Now, run the same test on grid, 
-        - `mvn clean test -Dserver=grid -Dbrowser=chrome` (default is -Dclient=local )
+        - `mvn clean test -Dhost=grid -Dbrowser=chrome` (default is -DaccessGridFrom=local )
         - You will see that tests ran successfully.
         - This proves that tests are running inside container in grid and not using driver from your local machine. 
 
-## Option3: Run tests on Docker grid [Client: docker container; Server: grid]
+## Option4: Run tests on Docker grid from test container [host: grid; accessGridFrom: container; ]
 
 ### `Goal:`
     - Tests triggered from docker container - test.
@@ -329,7 +352,7 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 - You can now restart again:
     - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
     - Enter into the test container and execute using:
-    - `docker container exec -it test mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome`
+    - `docker container exec -it test mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
 
 ## OptionB: Run tests using docker swarm
 ### Step1: Create a combined stack.yml file to deploy both tests and grid together
@@ -352,7 +375,7 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 - To list running services with:
     - `docker service ls`
 - Enter into the test container and execute using:
-    - `docker container exec -it 'container-name-here' mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome`
+    - `docker container exec -it 'container-name-here' mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
 - To check the logs of test container
     - `docker service logs --follow grid_test`
     - You can now see the results of test and that the container is still alive. 
@@ -360,7 +383,7 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 - Stop stack with
     - `docker stack rm grid`
 
-# Step5: Version control tests in Git (any server such as Github).
+# Step5: Version control tests in Git (any host such as Github).
 - [] to be added
 # Step6: Reports (For both CI-parceable and humans - html)
 - [] to be added
