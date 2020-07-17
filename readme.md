@@ -156,11 +156,11 @@ Case3: To Run tests on grid
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running BadMavenTest
-System property key:host; value: local
+System property key:host; value: container
 System property key:accessGridFrom; value: local
 System property key:browser; value: chrome
-host property passed to driver: local
-accessGridFrom property passed to driver: docker
+host property passed to driver: container
+accessGridFrom property passed to driver: local
 browser property passed to driver: chrome
 Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/4147@{#310}) on port 26362
 Only local connections are allowed.
@@ -178,11 +178,11 @@ Expected: is "Vancouver Public Library 3 |"
         at BadMavenTest.test1(BadMavenTest.java:56)
 
 [INFO] Running MavenTest
-System property key:host; value: local
+System property key:host; value: container
 System property key:accessGridFrom; value: local
 System property key:browser; value: chrome
-host property passed to driver: local
-accessGridFrom property passed to driver: docker
+host property passed to driver: container
+accessGridFrom property passed to driver: local
 browser property passed to driver: chrome
 Starting ChromeDriver 84.0.4147.30 (48b3e868b4cc0aa7e8149519690b6f6949e110a8-refs/branch-heads/41[1594910046.654][SEVERE]: bind() failed: Cannot assign requested address (99)
 47@{#310}) on port 3767
@@ -351,7 +351,7 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
     - `docker container rm $(docker container ls -aq)` (remove all containers - running and exited)  
 - You can now restart again:
     - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
-    - Enter into the test container and execute using:
+- Enter into the test container and execute using:
     - `docker container exec -it test mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
 
 ## OptionB: Run tests using docker swarm
