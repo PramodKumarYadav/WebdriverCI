@@ -25,34 +25,30 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class Driver extends Properties implements WebDriver {
     WebDriver driver;
-    String server;
-    String client;
+    String host;
     String browser;
+    String accessGridFrom;   
     URL gridURL;
 
     public Driver() {
-        this(getServer(), getClient(), getBrowser());
+        this(getHost(), getAccessGridFrom(), getBrowser());
     }
 
-    public Driver(String server,  String client, String browser) {
+    public Driver(String host,  String accessGridFrom, String browser) {
 
-        this.server = server;
-        System.out.println("server property passed to driver: " + server);
+        this.host = host;
+        System.out.println("host property passed to driver: " + host);
         
-        this.client = client;
-        System.out.println("client property passed to driver: " + client);
+        this.accessGridFrom = accessGridFrom;
+        System.out.println("accessGridFrom property passed to driver: " + accessGridFrom);
 
         this.browser = browser;
         System.out.println("browser property passed to driver: " + browser);
 
-        switch (server.toLowerCase()) {
+        switch (host.toLowerCase()) {
             case "local":
-                if (browser.equalsIgnoreCase("chrome")) {
-                    ChromeOptions options = new ChromeOptions();
-                    if (client.equalsIgnoreCase("docker"))  {
-                        options.setHeadless(true);    
-                    }        
-                    this.driver = new ChromeDriver(options);
+                if (browser.equalsIgnoreCase("chrome")) {      
+                    this.driver = new ChromeDriver();
                 }
 
                 if (browser.equalsIgnoreCase("firefox")) {
@@ -67,18 +63,29 @@ public class Driver extends Properties implements WebDriver {
                     this.driver = new HtmlUnitDriver(true);
                 }
                 break;
+            case "container":
+                System.out.println("At this moment, we only support execution for Chrome driver");
+                if (browser.equalsIgnoreCase("chrome")) {
+                    // For executing in containers, the option MUST be set to headless. Else driver fails. 
+                    ChromeOptions options = new ChromeOptions();
+                    options.setHeadless(true);        
+                    this.driver = new ChromeDriver(options);
+                } 
+
+                break;
             case "grid":   
                 // This variable holds the value of grid url. 
-                // From local (as client) grid is accessible on localhost:4444. From container (as client), you can access grid by container name:4444.
                 String gridAddress = "";  
                 
-                // When calling tests on docker container hub (server) from local machine (as client)
-                if (client.equalsIgnoreCase("local"))  {
+                // When accessing grid from local machine
+                if (accessGridFrom.equalsIgnoreCase("local"))  {
                     gridAddress = "http://localhost:4444/wd/hub"; 
                 }
 
-                // When calling tests on docker container hub (server) from docker container (as client)
-                if (client.equalsIgnoreCase("docker"))  {
+                // When accessing grid from test container
+                // Note: While accessing grid from container both test and grid should be on same network. 
+                // use the snippets in Set-SeleniumGrid.ps1 to set it up the right way. 
+                if (accessGridFrom.equalsIgnoreCase("container"))  {
                     gridAddress = "http://hub:4444/wd/hub"; 
                 }                       
                 

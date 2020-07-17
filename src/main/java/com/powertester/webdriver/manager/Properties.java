@@ -1,46 +1,39 @@
 /*
+NOTE: Properites (this class) is the interface between User input from command line/CI to our test framework (mainly Driver class).
+Driver class then uses these properties to create the driver and browser based on chosen host. 
+
 Set these properties from CI (or command line parameter) and get the properties here.
-The defaults (when parameter not passed) for each property is specified in second argument; 
-so for server=local and browser=chrome.
+-> The defaults (when parameter not passed) for each property is specified in second argument of command 
+    ex: host = System.getProperty("host","local"); 
+-> Defaults for host=local and browser=chrome and accessGridFrom=local(ignored if not running tests in grid mode)
 
-Usage of properties from command line
-mvn clean test (defaults to -Dserver=local -Dbrowser=chrome )
-mvn clean test -Dbrowser=firefox (To run tests in firefox; defaults to -Dserver=local)
-mvn clean test -Dserver=local -Dbrowser=chrome (same as default)
-mvn clean test -Dserver=local -Dbrowser=chrome -Dtest=MavenTest (To run tests in chrome only for test class MavenTest)
-
-To run tests on grid from local client
-mvn clean test -Dserver=grid -Dbrowser=chrome (-Dclient=local is default)
-mvn clean test -Dbrowser=firefox -Dserver=grid -Dclient=local 
-
-To run tests on grid from docker container
-mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome
-mvn clean test -Dbrowser=firefox -Dserver=grid -Dclient=docker 
+Note: Refer Readme.md -> Step4: Test Execution -> [A quick summary of execution Modes] to see how we use these properties
+ for different execution Modes. 
 */
 
 package com.powertester.webdriver.manager;
 
 public class Properties {
-    private static String server;
-    private static String client;
+    private static String host;
     private static String browser;
+    private static String accessGridFrom;
 
-    public static String getServer() {
-        server = System.getProperty("server","local");
-        printSystemProperty("server","local");
-        return server;
-    }
-
-    public static String getClient() {
-        client = System.getProperty("client","local");
-        printSystemProperty("client","local");
-        return client;
+    public static String getHost() {
+        host = System.getProperty("host","local");
+        printSystemProperty("host","local");
+        return host;
     }
 
     public static String getBrowser() {
         browser = System.getProperty("browser","chrome");
         printSystemProperty("browser","chrome");
         return browser;
+    }
+
+    public static String getAccessGridFrom() {       
+        accessGridFrom = System.getProperty("accessGridFrom","local");
+        printSystemProperty("accessGridFrom","local");
+        return accessGridFrom;
     }
 
     private static void printSystemProperty(String key, String value) {
