@@ -344,7 +344,7 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 
 ## OptionA: Run tests using docker-compose
 - To run grid and tests via docker-compose (run): 
-    - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
+    - `docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml -f ./docker-compose-test-depend-on-grid.yml up`
 - Ctrl+c to exit.
 - Before restart:
     - `docker container stop $(docker container ls -aq)` (stop all containers - running and exited)
@@ -357,7 +357,7 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
 ## OptionB: Run tests using docker swarm
 ### Step1: Create a combined stack.yml file to deploy both tests and grid together
 > A combined file is now created using docker-compose-grid.yml and docker-compose-test.yml :
-- `docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml --log-level ERROR config > stack.yml`
+- `docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml -f ./docker-compose-test-depend-on-grid.yml --log-level ERROR config > stack.yml`
  
 ### Step2: Setup GRID-nodes and run test-nodes
 - Reference: https://github.com/SeleniumHQ/docker-selenium
@@ -374,8 +374,11 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
     - `docker stack ls`
 - To list running services with:
     - `docker service ls`
-- Enter into the test container and execute using:
-    - `docker container exec -it 'container-name-here' mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
+- Get the test container id (from name of container)
+    - For ex: name can be:  grid_test.1.s94xza3oisshvs01s4d614unp. But for filtering; first few letters (i.e. name of service are enough)
+    - `$testContainerId=docker container ls -f name=grid_test -q` 
+- Enter into the test container and execute using:  
+    - `docker container exec -it $testContainerId mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
 - To check the logs of test container
     - `docker service logs --follow grid_test`
     - You can now see the results of test and that the container is still alive. 
