@@ -71,7 +71,6 @@ public class Driver extends Properties implements WebDriver {
                     options.setHeadless(true);        
                     this.driver = new ChromeDriver(options);
                 } 
-
                 break;
             case "grid":   
                 // This variable holds the value of grid url. 
