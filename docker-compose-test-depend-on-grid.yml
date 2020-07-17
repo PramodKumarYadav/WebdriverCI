@@ -1,10 +1,6 @@
 # An override file to use when you want to run tests on grid containers, from test containers. 
 # This will make sure that the test container will wait for grid containers to be up, before starting test container.
 
-# If you want to give a default test and then keep container alive (not needed anymore with our new approach to do this)
-# command: sh -c "mvn clean test -Dserver=grid -Dclient=docker -Dbrowser=chrome -Dmaven.test.failure.ignore=true
-#     && tail -f /dev/null"
-
 version: '3.7'
 services:
   test:
