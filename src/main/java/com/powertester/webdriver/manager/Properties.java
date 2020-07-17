@@ -20,19 +20,19 @@ public class Properties {
 
     public static String getHost() {
         host = System.getProperty("host","local");
-        printSystemProperty("host","local");
+        printSystemProperty("host", host);
         return host;
     }
 
     public static String getBrowser() {
         browser = System.getProperty("browser","chrome");
-        printSystemProperty("browser","chrome");
+        printSystemProperty("browser", browser);
         return browser;
     }
 
     public static String getAccessGridFrom() {       
         accessGridFrom = System.getProperty("accessGridFrom","local");
-        printSystemProperty("accessGridFrom","local");
+        printSystemProperty("accessGridFrom", accessGridFrom);
         return accessGridFrom;
     }
 
