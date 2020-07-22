@@ -11,7 +11,7 @@ Note: Refer Readme.md -> Step4: Test Execution -> [A quick summary of execution 
  for different execution Modes. 
 */
 
-package com.powertester.webdriver.manager;
+package org.epo.webdriver.manager;
 
 public class Properties {
     private static String host;
