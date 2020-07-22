@@ -95,6 +95,12 @@ Jenkins(CI)- Docker(test env) - Selenium/mvn/junit (for browser automation) - re
 - [pass-parameters-from-command-line-to-a-selenium-project-using-maven-command](https://www.google.com/amp/s/eltestor.wordpress.com/2015/09/13/pass-parameters-from-command-line-to-a-selenium-project-using-maven-command/amp/)
 
 ## A quick summary of execution Modes
+There are in total 4 supported execution modes (at this moment, can increase in future):
+- `host=local` (tests are triggered from local. Tests run on local.)
+- `host=container` (tests are triggered from container. Tests run on the same container.)
+- `host=grid -accessHostFrom=local` (tests are triggered from local. Tests run on containers on a grid.)
+- `host=grid -accessHostFrom=container` (tests are triggered from container. Tests run on containers on a grid.)
+
 Properties called from command line are [`host, browser, accessGridFrom(only relevant for grid mode)`]
 ```
 Case1: To Run tests on local 
@@ -116,7 +122,7 @@ Case3: To Run tests on grid
     mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome
     mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=firefox 
 ```
-
+## Details on execution Modes
 ## Option1: Run tests locally [host: local]
 ### `Goal:`
     -  Tests are triggered and run locally
@@ -150,6 +156,7 @@ Case3: To Run tests on grid
     - `docker container ls` (list container to see if it is up. and now you can get its id/name)
     - `docker container exec -it test bash` (enter in the container)
     - `mvn clean test -Dhost=container`
+    -  `docker container exec -it test mvn clean test -Dhost=container` (or without entering into container in interactive mode)
     - This will give you successful results as below (we expect one test to fail and one to pass)
     - Note: You will still get a bind failure error but you will see that the tests have run succesfully. 
 ``` [INFO] -------------------------------------------------------
@@ -350,9 +357,15 @@ remote stacktrace: #0 0x55854c67bea9 <unknown>
     - `docker container stop $(docker container ls -aq)` (stop all containers - running and exited)
     - `docker container rm $(docker container ls -aq)` (remove all containers - running and exited)  
 - You can now restart again:
-    - `docker-compose -f .\docker-compose-grid.yml -f .\docker-compose-test.yml up`
+    - `docker-compose -f ./docker-compose-grid.yml -f ./docker-compose-test.yml -f ./docker-compose-test-depend-on-grid.yml up`
 - Enter into the test container and execute using:
-    - `docker container exec -it test mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
+    - `docker container exec -it grid_test mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
+- Or to keep the execution consistent from Docker swarm mode and Docker-compose mode, we can do this:
+- Get the test container id (from name of container)
+    -   For ex: name can be: grid_test.1.s94xza3oisshvs01s4d614unp. But for filtering; first few letters (i.e. name of service are enough)
+    - `$testContainerId=docker container ls -f name=grid_test -q`
+- Enter into the test container and execute using:
+    - `docker container exec -it $testContainerId mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome`
 
 ## OptionB: Run tests using docker swarm
 ### Step1: Create a combined stack.yml file to deploy both tests and grid together
