@@ -156,7 +156,7 @@ Case3: To Run tests on grid
     - `docker container ls` (list container to see if it is up. and now you can get its id/name)
     - `docker container exec -it test bash` (enter in the container)
     - `mvn clean test -Dhost=container`
-    -  `docker container exec -it test mvn clean test -Dhost=container` (or without entering into container in interactive mode)
+    -  `docker container exec -it grid_test mvn clean test -Dhost=container` (or without entering into container in interactive mode)
     - This will give you successful results as below (we expect one test to fail and one to pass)
     - Note: You will still get a bind failure error but you will see that the tests have run succesfully. 
 ``` [INFO] -------------------------------------------------------
