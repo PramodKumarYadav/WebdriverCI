@@ -5,12 +5,15 @@
 # command: sh -c "mvn clean test -Dhost=grid -DaccessGridFrom=container -Dbrowser=chrome -Dmaven.test.failure.ignore=true
 #     && tail -f /dev/null"
 
+# I am keeping the container name as container_name: grid_test. This is to keep the execution commands consistent
+# in both docker-compose mode and in docker swarm mode
+
 version: '3.7'
 services:
   test:
     build: .
     image: test:mvn-3-jdk-8
-    container_name: test
+    container_name: grid_test
     working_dir: '/usr/src'
     volumes:
       - "./:/usr/src"
