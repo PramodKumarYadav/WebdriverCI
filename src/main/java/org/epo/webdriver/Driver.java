@@ -4,7 +4,7 @@
 // Thus browser is abstracted outside driver class.
 // Driver constructor makes sure that it can work with both cases (both with default browser or when browser is passed to it)
 
-package org.epo.webdriver.manager;
+package org.epo.webdriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
