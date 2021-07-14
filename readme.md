@@ -1,4 +1,8 @@
-# Getting started
+# Webdriver CI
+![GitHub contributors](https://img.shields.io/github/contributors/pramodkumaryadav/pesterci)
+![GitHub last commit](https://img.shields.io/github/last-commit/pramodkumaryadav/pesterci)
+
+## Getting started
 Download project (and quick test)
 From command line, run below command in the directory where you want to store this project. 
 - `Git clone https://github.com/PramodKumarYadav/WebdriverCI.git`
